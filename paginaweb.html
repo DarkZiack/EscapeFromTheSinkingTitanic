@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Last Enigma | Escape Room Virtual</title>
+    <title>Escape from the Sinking Titanic</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
@@ -23,7 +23,7 @@
         /* Animación suave de fondo */
         .hero-gradient {
             background: linear-gradient(180deg, rgba(10,10,10,0.7) 0%, rgba(10,10,10,1) 100%), 
-                        url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+                        url('SinkingTitanic.png') no-repeat center center fixed;
             background-size: cover;
             background-position: center;
         }
@@ -39,15 +39,15 @@
 
     <header class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-game font-bold tracking-tighter text-red-600">
-                ULTIMATUM<span class="text-white">ROOM</span>
+            <div class="text-2xl font-game font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-800 to-blue-600">
+                Abyssal<span class="text-white"> Games</span>
             </div>
             <div class="hidden md:flex space-x-8 text-sm font-game uppercase tracking-widest">
-                <a href="#inicio" class="hover:text-red-500 transition">Inicio</a>
-                <a href="#historia" class="hover:text-red-500 transition">Historia</a>
-                <a href="#mecanicas" class="hover:text-red-500 transition">Mecánicas</a>
+                <a href="#inicio" class="hover:text-blue-500 transition">Inicio</a>
+                <a href="#historia" class="hover:text-blue-500 transition">Historia</a>
+                <a href="#mecanicas" class="hover:text-blue-500 transition">Mecánicas</a>
             </div>
-            <a href="juego.html" class="bg-red-600 px-5 py-2 rounded-sm font-game text-xs hover:bg-red-700 transition">
+            <a href="juego.html" class="bg-blue-900 px-5 py-2 rounded-sm font-game text-xs hover:bg-blue-700 transition">
                 JUGAR AHORA
             </a>
         </nav>
@@ -55,13 +55,13 @@
 
     <section id="inicio" class="hero-gradient h-screen flex items-center justify-center text-center px-4">
         <div class="max-w-4xl">
-            <span class="font-game text-red-500 tracking-[0.3em] text-sm mb-4 block">EXPERIENCIA INMERSIVA</span>
-            <h1 class="text-5xl md:text-8xl font-game font-bold mb-6 leading-none">EL CÓDIGO <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400">PERDIDO</span></h1>
+            <span class="font-game text-blue-500 tracking-[0.3em] text-sm mb-4 block">EXPERIENCIA INMERSIVA</span>
+            <h1 class="text-5xl md:text-8xl font-game font-bold mb-6 leading-none">ESCAPE FROM THE SINKING <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400">TITANIC</span></h1>
             <p class="text-gray-400 text-lg md:text-xl mb-10 max-w-2xl mx-auto font-light">
                 No es solo un juego. Es una carrera contra el reloj en una instalación de máxima seguridad. ¿Tienes la agudeza mental para salir antes de que se agote el oxígeno?
             </p>
             <div class="flex flex-col md:flex-row gap-4 justify-center">
-                <a href="juego.html" class="font-game bg-red-600 text-white px-10 py-4 rounded-full text-lg hover-glow transition-all duration-300">
+                <a href="juego.html" class="font-game bg-blue-900 text-white px-10 py-4 rounded-full text-lg hover-glow transition-all duration-300">
                     INICIAR SECUENCIA
                 </a>
             </div>
@@ -72,16 +72,18 @@
         <div class="container mx-auto px-6">
             <div class="grid md:grid-cols-2 gap-16 items-center">
                 <div>
-                    <h2 class="font-game text-3xl mb-6 border-l-4 border-red-600 pl-4">LA NARRATIVA</h2>
+                    <h2 class="font-game text-3xl mb-6 border-l-4 border-blue-600 pl-4">LA NARRATIVA</h2>
                     <p class="text-gray-400 leading-relaxed mb-6">
-                        Año 2084. Te despiertas en una sala blindada sin recordar cómo llegaste allí. Una voz sintética te informa que el protocolo de autodestrucción se ha activado. 
+                        En Escape from the Sinking Titanic, te enfrentas a una carrera contra el reloj dentro de un enorme barco que se hunde, donde cada habitación es una pieza de un rompecabezas gigante. Tendrás que moverte entre estancias, activar mecanismos, encontrar objetos clave y desandar tus pasos para desbloquear nuevos caminos y soluciones, conectando pistas que al principio parecen no tener relación. 
                     </p>
                     <p class="text-gray-400 leading-relaxed">
-                        A través de una serie de terminales antiguos y documentos encriptados, deberás reconstruir la verdad sobre el experimento "Aethelgard" y encontrar la salida antes de que la sala se convierta en tu tumba.
+                        El juego te invita a observar con atención, memorizar rutas y pensar estratégicamente, ya que el entorno cambia y el tiempo no se detiene. Todo está presentado con una estética vintage que refuerza la tensión y la sensación de estar atrapado en un lugar elegante, pero condenado, donde cada decisión te puede acercar a la salida... o sellar tu destino.
+
                     </p>
                 </div>
                 <div class="relative">
-                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Código" class="rounded-lg neon-border opacity-80">
+                    <img src="historia.png" alt="Código" 
+                        class="rounded-lg neon-border opacity-80 w-full aspect-video object-cover">
                 </div>
             </div>
         </div>
@@ -90,12 +92,12 @@
     <section id="mecanicas" class="py-24 bg-black">
         <div class="container mx-auto px-6 text-center mb-16">
             <h2 class="font-game text-3xl mb-4">SISTEMA DE JUEGO</h2>
-            <div class="h-1 w-20 bg-red-600 mx-auto"></div>
+            <div class="h-1 w-20 bg-blue-600 mx-auto"></div>
         </div>
         
         <div class="container mx-auto px-6 grid md:grid-cols-3 gap-12">
-            <div class="p-8 bg-[#111] border border-white/5 rounded-xl hover:border-red-600/50 transition-colors group">
-                <div class="text-red-600 mb-6 group-hover:scale-110 transition-transform">
+            <div class="p-8 bg-[#111] border border-white/5 rounded-xl hover:border-blue-600/50 transition-colors group">
+                <div class="text-blue-600 mb-6 group-hover:scale-110 transition-transform">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
@@ -104,8 +106,8 @@
                 <p class="text-gray-500 text-sm">Desencripta archivos, resuelve acertijos matemáticos y conecta circuitos para avanzar.</p>
             </div>
 
-            <div class="p-8 bg-[#111] border border-white/5 rounded-xl hover:border-red-600/50 transition-colors group">
-                <div class="text-red-600 mb-6 group-hover:scale-110 transition-transform">
+            <div class="p-8 bg-[#111] border border-white/5 rounded-xl hover:border-blue-600/50 transition-colors group">
+                <div class="text-blue-600 mb-6 group-hover:scale-110 transition-transform">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
@@ -114,8 +116,8 @@
                 <p class="text-gray-500 text-sm">Busca pistas ocultas en el entorno. Cada objeto interactuable puede ser la clave.</p>
             </div>
 
-            <div class="p-8 bg-[#111] border border-white/5 rounded-xl hover:border-red-600/50 transition-colors group">
-                <div class="text-red-600 mb-6 group-hover:scale-110 transition-transform">
+            <div class="p-8 bg-[#111] border border-white/5 rounded-xl hover:border-blue-600/50 transition-colors group">
+                <div class="text-blue-600 mb-6 group-hover:scale-110 transition-transform">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -132,7 +134,7 @@
                 © 2026 PROYECTO ESCAPE - DESARROLLADO CON PASIÓN
             </div>
             <div class="flex space-x-6">
-                <span class="text-xs font-game text-red-900 uppercase tracking-tighter">Acceso de Desarrollador</span>
+                <span class="text-xs font-game text-blue-900 uppercase tracking-tighter">Acceso de Desarrollador</span>
             </div>
         </div>
     </footer>
