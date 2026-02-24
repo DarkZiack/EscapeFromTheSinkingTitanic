@@ -1,58 +1,50 @@
 # 🚢 Escape from the Sinking Titanic
 
-**Escape from the Sinking Titanic** is an adventure–puzzle game where you race against time inside a slowly sinking ship.  
-Every room is a piece of a giant puzzle you must solve to survive.
+**Escape from the Sinking Titanic** és un joc d'aventura i trencaclosques on t'enfrontes a una cursa contra el temps dins d'un vaixell que s'enfonsa lentament.  
+Cada habitació és una peça clau d'un trencaclosques gegant que hauràs de resoldre per sobreviure.
 
-The experience blends **strategic exploration** with a **vintage visual narrative**, capturing both the elegance and the tension of a tragically sealed fate.
+L'experiència combina **exploració estratègica** amb una **narrativa visual vintage**, transmetent la tensió i l'elegància d'un destí tràgicament segellat.
 
----
+https://docs.google.com/document/d/1eH505_W1uBod1oyxw8frXFRc_U5josWgIWl4K5K2r60/edit?tab=t.0#heading=h.8iz3caj331gm
 
-## 🕹️ Game Features
-
-🔹 **Connected Puzzles**  
-Clues and objects found in one area may unlock mechanisms in a completely different part of the ship.
-
-🔹 **Dynamic Environment**  
-The environment evolves as water rises, forcing you to adapt, memorize routes, and think strategically.
-
-🔹 **Vintage Aesthetic**  
-Carefully crafted art direction that enhances immersion in the golden age of the Titanic.
-
-🔹 **Time Management**  
-Every decision matters. Efficient backtracking is crucial to finding your escape before it’s too late.
+https://docs.google.com/spreadsheets/d/12aha2aXVs-9MUbdha47ZoSW8vw0imrei2J4w7z9XV3w/edit?gid=0#gid=0
 
 ---
 
-## 🧭 Project Vision
+## 🕹️ Característiques del Joc
 
-This project aims to combine:
-- Environmental storytelling  
-- Escape-room-style puzzle design  
-- Tension-driven gameplay  
-- Atmospheric exploration  
+🔹 **Trencaclosques Connectats**  
+Les pistes i els objectes trobats en una zona poden desbloquejar mecanismes en parts completament oposades del vaixell.
 
-The player is constantly balancing **risk, memory, and speed** while navigating a collapsing world.
+🔹 **Entorn Dinàmic**  
+L'entorn evoluciona a mesura que l'aigua puja, obligant-te a adaptar-te, memoritzar rutes i pensar estratègicament.
 
----
+🔹 **Estètica Vintage**  
+Direcció artística acurada que reforça la immersió en l'època daurada del Titanic.
 
-## 🛠️ Project Documentation
-
-You can find all technical details, design documentation, and planning here:
-
-📄 **Technical Documentation (Google Docs)**  
-> Game Design Document (GDD), mechanics, system architecture  
-
-📅 **Planning & Progress Tracking (Google Sheets)**  
-> Roadmap, sprint planning, backlog, deadlines  
-
-_(Add your real links here)_
+🔹 **Gestió del Temps**  
+Cada decisió compta. Recórrer els teus passos de manera eficient és vital per trobar la sortida abans que sigui massa tard.
 
 ---
 
-## 🚀 Getting Started
+## 🛠️ Documentació del Projecte
 
-> ℹ️ This section will be completed once the project is published.
+Consulta tots els detalls tècnics, el disseny i la gestió de les tasques:
 
-### Clone the repository
+📄 **Documentació Tècnica (Google Docs)**  
+> Game Design Document (GDD), mecàniques de joc i arquitectura del programari
+
+📅 **Planificació i Seguiment (Google Sheets)**  
+> Full de ruta, gestió de sprints, Backlog i calendari d'entrega
+
+_(Afegeix els enllaços reals aquí)_
+
+---
+
+## 🚀 Com Començar
+
+> ℹ️ Aquesta secció es completarà quan el codi estigui disponible.
+
+### Clonar el repositori
 ```bash
-git clone https://github.com/your-username/escape-titanic.git
+git clone https://github.com/el-teu-usuari/escape-titanic.git
