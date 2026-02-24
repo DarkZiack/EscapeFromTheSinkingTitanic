@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Habitacion VR</title>
+    <meta name="description" content="Habitacion VR with A-Frame">
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
+  </head>
+  <body>
+    <a-scene>
+      
+      <!-- Assets -->
+      <a-assets>
+        <a-asset-item id="habitacion-model" src="models/building_hallway.glb"></a-asset-item>
+        <a-asset-item id="pared-model" src="models/pared-mesh.glb"></a-asset-item>
+      </a-assets>
+
+      <!-- Room Model -->
+      <a-entity 
+        id="habitacion"
+        gltf-model="#habitacion-model"
+        position="9.5, 0, 3.5"
+        scale="0.025 0.025 0.025"
+        shadow="cast: true; receive: true">
+      </a-entity>
+
+      <!-- Pared al final del pasillo -->
+      <a-entity 
+        id="pared-final"
+        gltf-model="#pared-model"
+        position="-3.55 3.401 3.599"
+        rotation="0 90 0"
+        scale="0.025 0.025 0.025"
+        shadow="cast: true; receive: true">
+      </a-entity>
+
+      <!-- Floor plane for reference (can be invisible) -->
+      <a-plane 
+        position="0 0.01 0" 
+        rotation="-90 0 0" 
+        width="100" 
+        height="100" 
+        color="#888888"
+        visible="false"
+        shadow="receive: true">
+      </a-plane>
+
+      <!-- Player Rig with Movement Controls -->
+      <a-entity 
+        id="player-rig"
+        movement-controls="speed: 0.15; fly: false; constrains: { min: {y: 0}, max: {y: 10} }"
+        position="0 0 5">
+        
+        <!-- Camera -->
+        <a-entity 
+          id="camera"
+          camera 
+          position="0 1.6 0" 
+          look-controls="pointerLockEnabled: true"
+          wasd-controls="enabled: false; acceleration: 30">
+          
+          <a-cursor 
+            color="#FFF" 
+            opacity="0.5"
+            scale="0.4 0.4 0.4"
+            fuse="false">
+          </a-cursor>
+        </a-entity>
+        
+        <a-sphere 
+          radius="0.5" 
+          position="0 0 0" 
+          visible="false"
+          class="player-collider">
+        </a-sphere>
+        
+      </a-entity>
+
+      <!-- Lighting -->
+      <a-entity light="type: ambient; color: #FFFFFF; intensity: 0.5"></a-entity>
+      <a-entity light="type: directional; color: #FFFFFF; intensity: 0.8" position="-1 2 1" cast-shadow="true"></a-entity>
+
+      <!-- Sky -->
+      <a-sky color="#1a1a2e"></a-sky>
+
+      <!-- Instructions UI -->
+      <div style="position: fixed; top: 20px; left: 20px; color: white; font-family: Arial; z-index: 999; pointer-events: none;">
+        <p><strong>Controls:</strong></p>
+        <p>W/A/S/D - Move</p>
+        <p>Mouse - Look around</p>
+        <p>Click to lock cursor</p>
+      </div>
+
+    </a-scene>
+  </body>
+</html>
