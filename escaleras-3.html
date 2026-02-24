@@ -62,7 +62,7 @@ html<!DOCTYPE html>
       <!-- ============================================================ -->
       <a-entity
         id="boton-2"
-        position="6.412 1.268 1.461"
+        position="6.412 1.268 1.47"
         rotation="0 0 0">
         <a-plane
           width="0.5"
@@ -73,7 +73,7 @@ html<!DOCTYPE html>
           cursor-listener>
         </a-plane>
         <a-text
-          value="Destino 2"
+          value="Armeria"
           align="center"
           color="#FFFFFF"
           width="1.8"
@@ -86,7 +86,7 @@ html<!DOCTYPE html>
       <!-- ============================================================ -->
       <a-entity
         id="boton-3"
-        position="15.0 1.268 5.511"
+        position="15.15 1.368 5.45"
         rotation="0 180 0">
         <a-plane
           width="0.5"
@@ -97,7 +97,7 @@ html<!DOCTYPE html>
           cursor-listener>
         </a-plane>
         <a-text
-          value="Destino 3"
+          value="Sala Reuniones"
           align="center"
           color="#FFFFFF"
           width="1.8"
@@ -173,14 +173,14 @@ html<!DOCTYPE html>
 
       // ── Botón 2 ── CAMBIA EL ARCHIVO HTML AQUÍ ───────────────
       const btn2 = document.querySelector('#boton-2');
-      btn2.addEventListener('click', () => window.location.href = 'ARCHIVO-2.html');
+      btn2.addEventListener('click', () => window.location.href = 'armeria.html');
       const plane2 = btn2.querySelector('a-plane');
       plane2.addEventListener('mouseenter', () => plane2.setAttribute('color', '#444444'));
       plane2.addEventListener('mouseleave', () => plane2.setAttribute('color', '#222222'));
 
       // ── Botón 3 ── CAMBIA EL ARCHIVO HTML AQUÍ ───────────────
       const btn3 = document.querySelector('#boton-3');
-      btn3.addEventListener('click', () => window.location.href = 'ARCHIVO-3.html');
+      btn3.addEventListener('click', () => window.location.href = 'sala_reunion.html');
       const plane3 = btn3.querySelector('a-plane');
       plane3.addEventListener('mouseenter', () => plane3.setAttribute('color', '#444444'));
       plane3.addEventListener('mouseleave', () => plane3.setAttribute('color', '#222222'));
