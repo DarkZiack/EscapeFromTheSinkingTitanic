@@ -35,6 +35,33 @@
         shadow="cast: true; receive: true">
       </a-entity>
 
+      <!-- Botón en la pared para ir a escaleras-3.html -->
+      <a-entity
+        id="boton-escaleras"
+        position="-3.35 1.1 3.45"
+        rotation="0 90 0">
+
+        <!-- Fondo del botón -->
+        <a-plane
+          width="0.5"
+          height="0.2"
+          color="#222222"
+          opacity="0.85"
+          class="clickable"
+          cursor-listener>
+        </a-plane>
+
+        <!-- Texto del botón -->
+        <a-text
+          value="Volver al pasillo"
+          align="center"
+          color="#FFFFFF"
+          width="1.8"
+          position="0 0 0.01">
+        </a-text>
+
+      </a-entity>
+
       <!-- Floor plane for reference (can be invisible) -->
       <a-plane 
         position="0 0.01 0" 
@@ -93,5 +120,22 @@
       </div>
 
     </a-scene>
+
+    <script>
+      // Navegación al hacer click en el botón
+      document.querySelector('#boton-escaleras').addEventListener('click', function () {
+        window.location.href = 'pasillo-2.html';
+      });
+
+      // Efecto hover: cambia color al mirar encima
+      const botonPlane = document.querySelector('#boton-escaleras a-plane');
+      botonPlane.addEventListener('mouseenter', function () {
+        this.setAttribute('color', '#444444');
+      });
+      botonPlane.addEventListener('mouseleave', function () {
+        this.setAttribute('color', '#222222');
+      });
+    </script>
+
   </body>
 </html>
