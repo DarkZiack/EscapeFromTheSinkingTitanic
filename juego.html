@@ -15,6 +15,8 @@
       <!-- Assets -->
       <a-assets>
         <a-asset-item id="habitacion-model" src="models/habitacion.glb"></a-asset-item>
+        <a-asset-item id="key-model" src="models/clau_habitacion.glb"></a-asset-item>
+        <a-asset-item id="door-model" src="models/puerta.glb"></a-asset-item>
       </a-assets>
 
       <!-- Room Model -->
@@ -24,6 +26,72 @@
         position="9.5, 0, 3.5"
         scale="0.07 0.07 0.07"
         shadow="cast: true; receive: true">
+      </a-entity>
+
+      <!-- Key (Clau Habitacion) - Collectible -->
+      <a-entity 
+        id="key"
+        position="-0.543 0.953 2.390"
+        scale="0.5 0.5 0.5"
+        animation="property: rotation; to: 0 360 0; loop: true; dur: 3000; easing: linear">
+        
+        <!-- Key Model -->
+        <a-entity 
+          gltf-model="#key-model"
+          class="clickable">
+        </a-entity>
+        
+        <!-- Invisible hitbox for clicking -->
+        <a-box 
+          id="key-hitbox"
+          width="0.5" 
+          height="0.5" 
+          depth="0.5"
+          visible="false"
+          class="clickable"
+          key-click>
+        </a-box>
+        
+      </a-entity>
+
+      <!-- Door (Puerta) - Visual only -->
+      <a-entity 
+        id="door"
+        position="2.35 -0.2 5.85"
+        scale="0.0109 0.01228 0.01">
+        
+        <!-- Door Model -->
+        <a-entity 
+          gltf-model="#door-model">
+        </a-entity>
+        
+      </a-entity>
+
+      <!-- Button to open door - placed in front of the door -->
+      <a-entity
+        id="boton-puerta"
+        position="2.185 1.2 5.679"
+        rotation="0 -180 0">
+        
+        <!-- Button background -->
+        <a-plane
+          width="0.8"
+          height="0.3"
+          color="#222222"
+          opacity="0.85"
+          class="clickable"
+          door-click>
+        </a-plane>
+
+        <!-- Button text -->
+        <a-text
+          value="Abrir Puerta"
+          align="center"
+          color="#FFFFFF"
+          width="2"
+          position="0 0 0.01">
+        </a-text>
+        
       </a-entity>
 
       <!-- Floor plane for reference (can be invisible) -->
@@ -56,7 +124,8 @@
             color="#FFF" 
             opacity="0.5"
             scale="0.4 0.4 0.4"
-            fuse="false">
+            fuse="false"
+            raycaster="objects: .clickable">
           </a-cursor>
         </a-entity>
         
@@ -86,6 +155,42 @@
       </div>
 
     </a-scene>
+
+    <script>
+      // Component to handle key click
+      AFRAME.registerComponent('key-click', {
+        init: function () {
+          this.el.addEventListener('click', function () {
+            const keyEntity = document.querySelector('#key');
+            keyEntity.setAttribute('visible', false);
+            window.hasKey = true;
+            console.log('Key collected! Door is now unlocked.');
+          });
+        }
+      });
+
+      // Component to handle door click
+      AFRAME.registerComponent('door-click', {
+        init: function () {
+          this.el.addEventListener('click', function () {
+            if (window.hasKey) {
+              window.location.href = 'pasillo-2.html';
+            } else {
+              alert('La puerta está cerrada. Necesitas la llave!');
+            }
+          });
+          
+          // Hover effects
+          this.el.addEventListener('mouseenter', function () {
+            this.setAttribute('color', '#444444');
+          });
+          this.el.addEventListener('mouseleave', function () {
+            this.setAttribute('color', '#222222');
+          });
+        }
+      });
+    </script>
+
   </body>
 </html>
 
