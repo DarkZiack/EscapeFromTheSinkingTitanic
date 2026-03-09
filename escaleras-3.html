@@ -155,21 +155,229 @@
         display: block;
         margin-bottom: 2px;
       }
+
+      /* ── Power status badge ── */
+      #power-status {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        padding: 6px 16px;
+        border-radius: 4px;
+        pointer-events: none;
+        z-index: 999;
+        text-transform: uppercase;
+        transition: all 0.5s;
+        border: 1px solid rgba(255, 60, 60, 0.4);
+        background: rgba(60, 0, 0, 0.7);
+        color: #ff4444;
+      }
+
+      #power-status.on {
+        border-color: rgba(60, 255, 100, 0.5);
+        background: rgba(0, 40, 10, 0.8);
+        color: #44ff88;
+        box-shadow: 0 0 14px rgba(60, 255, 100, 0.2);
+      }
+
+      /* ── Keycard overlay ── */
+      #keycard-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.92);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s;
+        font-family: 'Rajdhani', sans-serif;
+      }
+
+      #keycard-overlay.show {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      #keycard-overlay .kc-title {
+        font-size: 11px;
+        letter-spacing: 0.3em;
+        color: rgba(255, 255, 255, 0.4);
+        text-transform: uppercase;
+        margin-bottom: 24px;
+      }
+
+      #keycard-overlay .kc-door {
+        width: 200px;
+        height: 300px;
+        border: 2px solid rgba(255, 200, 60, 0.3);
+        border-radius: 6px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 32px;
+        background: rgba(10, 8, 0, 0.6);
+      }
+
+      #keycard-overlay .kc-door-icon {
+        font-size: 64px;
+        filter: drop-shadow(0 0 12px rgba(255, 200, 60, 0.3));
+      }
+
+      #keycard-overlay .kc-reader {
+        position: absolute;
+        right: -18px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 14px;
+        height: 40px;
+        background: rgba(30, 30, 30, 0.9);
+        border: 1px solid rgba(255, 200, 60, 0.3);
+        border-radius: 3px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #keycard-overlay .kc-reader-light {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #ff4444;
+        transition: background 0.3s, box-shadow 0.3s;
+      }
+
+      #keycard-overlay .kc-reader-light.green {
+        background: #44ff88;
+        box-shadow: 0 0 8px #44ff88;
+      }
+
+      #keycard-overlay .kc-card {
+        width: 80px;
+        height: 50px;
+        background: linear-gradient(135deg, #1a1200, #3a2a00);
+        border: 1px solid rgba(255, 200, 60, 0.6);
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 0 16px rgba(255, 180, 0, 0.2);
+      }
+
+      #keycard-overlay .kc-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 0 24px rgba(255, 180, 0, 0.4);
+      }
+
+      #keycard-overlay .kc-card.swiping {
+        animation: swipe-anim 0.6s ease-in-out forwards;
+      }
+
+      @keyframes swipe-anim {
+        0%   { transform: translateY(0) translateX(0); }
+        40%  { transform: translateY(-10px) translateX(80px); }
+        70%  { transform: translateY(-10px) translateX(90px); }
+        100% { transform: translateY(-10px) translateX(90px); opacity: 0; }
+      }
+
+      #keycard-overlay .kc-hint {
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        color: rgba(255, 200, 60, 0.7);
+        text-transform: uppercase;
+        margin-top: 16px;
+      }
+
+      #keycard-overlay .kc-cancel {
+        margin-top: 28px;
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        color: rgba(255, 255, 255, 0.25);
+        cursor: pointer;
+        text-transform: uppercase;
+        pointer-events: all;
+        transition: color 0.2s;
+      }
+
+      #keycard-overlay .kc-cancel:hover { color: rgba(255, 255, 255, 0.6); }
+
+      @keyframes door-open {
+        0%   { transform: scaleX(1); opacity: 1; }
+        60%  { transform: scaleX(0.05); opacity: 0.4; }
+        100% { transform: scaleX(0); opacity: 0; }
+      }
+
+      #keycard-overlay.opening .kc-door {
+        animation: door-open 0.8s ease-in forwards;
+        transform-origin: left center;
+      }
+
+      /* ── Fuse hint (sin energía) ── */
+      #fuse-hint {
+        position: fixed;
+        bottom: 105px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: #ff8844;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: rgba(40, 10, 0, 0.8);
+        border: 1px solid rgba(255, 100, 40, 0.3);
+        padding: 6px 18px;
+        border-radius: 4px;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 1002;
+        transition: opacity 0.3s;
+        white-space: nowrap;
+      }
+
+      #fuse-hint.show { opacity: 1; }
+
+      #timer {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        color: #ff4444;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        z-index: 999;
+        pointer-events: none;
+        text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+        background: rgba(0,0,0,0.5);
+        padding: 5px 15px;
+        border-radius: 4px;
+        border: 1px solid rgba(255,68,68,0.5);
+      }
+
+      #timer.warning { color: #ff8800; border-color: rgba(255,136,0,0.5); }
+      #timer.critical { color: #ff0000; animation: pulse 0.5s infinite; border-color: rgba(255,0,0,0.8); }
+      @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
     </style>
   </head>
   <body>
     <a-scene>
       
-      <!-- Assets -->
       <a-assets>
         <a-asset-item id="habitacion-model" src="models/building_hallway.glb"></a-asset-item>
         <a-asset-item id="pared-model" src="models/pared-mesh.glb"></a-asset-item>
         <a-asset-item id="fuse-box-model" src="models/small_fuse_box.glb"></a-asset-item>
         <a-asset-item id="keycard-model" src="models/keycard_1.glb"></a-asset-item>
-        
       </a-assets>
 
-      <!-- Room Model -->
       <a-entity 
         id="habitacion"
         gltf-model="#habitacion-model"
@@ -178,7 +386,6 @@
         shadow="cast: true; receive: true">
       </a-entity>
 
-      <!-- Pared al final del pasillo -->
       <a-entity 
         id="pared-final"
         gltf-model="#pared-model"
@@ -188,21 +395,48 @@
         shadow="cast: true; receive: true">
       </a-entity>
 
-      <!-- Small Fuse Box (decorativo) -->
+      <!-- Small Fuse Box — INTERACTUABLE, activa la luz -->
       <a-entity 
         id="fuse-box"
         gltf-model="#fuse-box-model"
         position="21.56 1.543 1.545"
         rotation="0 270 0"
         scale="0.02 0.02 0.02"
+        class="clickable interactable"
+        data-action="fusebox"
         shadow="cast: true; receive: true">
       </a-entity>
 
-      <!-- Keycard-1 (recogible) -->
+      <!-- Indicador luminoso encima del fuse box (rojo=OFF / verde=ON) -->
+      <a-sphere
+        id="fuse-light"
+        position="21.56 2.3 1.545"
+        radius="0.06"
+        color="#ff2200"
+        material="emissive: #ff2200; emissiveIntensity: 1.5">
+      </a-sphere>
+
+      <!-- Luz puntual de la habitación, controlada por el fuse box -->
+      <a-entity
+        id="room-point-light"
+        light="type: point; color: #fff8e0; intensity: 0; distance: 20; decay: 1.5"
+        position="10 3 3">
+      </a-entity>
+
+      <!-- Box object -->
+      <a-entity 
+        id="box"
+        gltf-model="models/box.glb"
+        position="4.3 0.011 5.210"
+        rotation="0 0 0"
+        scale="1 1 1"
+        shadow="cast: true; receive: true">
+      </a-entity>
+
       <a-entity 
         id="keycard-1"
         gltf-model="#keycard-model"
-        position="21.86 2.051 1.648"
+        position="4.3 0.011 5.210"
         rotation="90 270 -90"
         scale="1 1 1"
         class="pickable"
@@ -212,82 +446,61 @@
         shadow="cast: true; receive: true">
       </a-entity>
 
-      <!-- Botón 1 - Volver al pasillo -->
-      <a-entity
-        id="boton-escaleras"
-        position="-3.35 1.1 3.45"
-        rotation="0 90 0">
-        <a-plane
-          width="0.5"
-          height="0.2"
-          color="#222222"
-          opacity="0.85"
-          class="clickable"
-          cursor-listener>
-        </a-plane>
-        <a-text
-          value="Volver al pasillo"
-          align="center"
-          color="#FFFFFF"
-          width="1.8"
-          position="0 0 0.01">
-        </a-text>
+      <a-entity id="boton-escaleras" position="-3.35 1.1 3.45" rotation="0 90 0">
+        <a-plane width="0.5" height="0.2" color="#222222" opacity="0.85" class="clickable" cursor-listener></a-plane>
+        <a-text value="Volver al pasillo" align="center" color="#FFFFFF" width="1.8" position="0 0 0.01"></a-text>
       </a-entity>
 
-      <!-- Botón 2 - Armeria -->
-      <a-entity
-        id="boton-2"
-        position="6.412 1.268 1.47"
-        rotation="0 0 0">
-        <a-plane
-          width="0.5"
-          height="0.2"
-          color="#222222"
-          opacity="0.85"
-          class="clickable"
-          cursor-listener>
-        </a-plane>
-        <a-text
-          value="Armeria"
-          align="center"
-          color="#FFFFFF"
-          width="1.8"
-          position="0 0 0.01">
-        </a-text>
+      <a-entity id="boton-2" position="6.412 1.268 1.47" rotation="0 0 0">
+        <a-plane width="0.5" height="0.2" color="#222222" opacity="0.85" class="clickable" cursor-listener></a-plane>
+        <a-text value="Armeria" align="center" color="#FFFFFF" width="1.8" position="0 0 0.01"></a-text>
       </a-entity>
 
-      <!-- Botón 3 - Sala Reuniones -->
+      <!-- Botón 3 - Sala Reuniones (BLOQUEADO hasta luz ON + keycard) -->
       <a-entity
         id="boton-3"
         position="15.15 1.368 5.45"
         rotation="0 180 0">
         <a-plane
+          id="boton-3-border"
+          width="0.54"
+          height="0.24"
+          color="#550000"
+          opacity="0.5"
+          position="0 0 -0.002">
+        </a-plane>
+        <a-plane
+          id="boton-3-plane"
           width="0.5"
           height="0.2"
-          color="#222222"
-          opacity="0.85"
+          color="#1a0000"
+          opacity="0.9"
           class="clickable"
           cursor-listener>
         </a-plane>
         <a-text
-          value="Sala Reuniones"
+          id="boton-3-text"
+          value="🔒 Sala Reuniones"
           align="center"
-          color="#FFFFFF"
+          color="#884444"
           width="1.8"
           position="0 0 0.01">
         </a-text>
+        <a-text
+          id="lock-status"
+          value="⚡ Sin energia"
+          align="center"
+          color="#ff4444"
+          width="1.2"
+          position="0 -0.18 0.01"
+          scale="0.5 0.5 0.5">
+        </a-text>
+      <a-entity id="boton-3" position="15.15 1.368 5.45" rotation="0 180 0">
+        <a-plane width="0.5" height="0.2" color="#222222" opacity="0.85" class="clickable" cursor-listener></a-plane>
+        <a-text value="Sala Reuniones" align="center" color="#FFFFFF" width="1.8" position="0 0 0.01"></a-text>
       </a-entity>
 
-      <!-- Floor -->
-      <a-plane 
-        position="0 0.01 0" 
-        rotation="-90 0 0" 
-        width="100" 
-        height="100" 
-        color="#888888"
-        visible="false"
-        shadow="receive: true">
-      </a-plane>
+      <a-plane position="0 0.01 0" rotation="-90 0 0" width="100" height="100" color="#888888" visible="false" shadow="receive: true"></a-plane>
 
       <!-- Player Rig -->
       <a-entity 
@@ -308,94 +521,147 @@
             opacity="0.5"
             scale="0.4 0.4 0.4"
             fuse="false"
-            raycaster="objects: .pickable, .clickable; far: 0.5">
+            raycaster="objects: .pickable, .clickable, .interactable; far: 1">
           </a-cursor>
         </a-entity>
-        
-        <a-sphere 
-          radius="0.5" 
-          position="0 0 0" 
-          visible="false"
-          class="player-collider">
-        </a-sphere>
-        
+        <a-sphere radius="0.5" position="0 0 0" visible="false" class="player-collider"></a-sphere>
       </a-entity>
 
       <!-- Lighting -->
-      <a-entity light="type: ambient; color: #FFFFFF; intensity: 0.5"></a-entity>
-      <a-entity light="type: directional; color: #FFFFFF; intensity: 0.8" position="-1 2 1" cast-shadow="true"></a-entity>
+      <a-entity light="type: ambient; color: #FFFFFF; intensity: 0.3" id="ambient-light"></a-entity>
+      <a-entity light="type: directional; color: #FFFFFF; intensity: 0.5" position="-1 2 1" cast-shadow="true"></a-entity>
 
       <!-- Sky -->
       <a-sky color="#1a1a2e"></a-sky>
 
     </a-scene>
 
-    <!-- ── HOTBAR ── -->
     <div id="hotbar">
-      <div class="hotbar-slot" id="slot-1">
-        <span class="slot-number">1</span>
-        <span class="slot-icon" id="slot-1-icon"></span>
-        <span class="slot-label" id="slot-1-label"></span>
-      </div>
-      <div class="hotbar-slot" id="slot-2">
-        <span class="slot-number">2</span>
-        <span class="slot-icon" id="slot-2-icon"></span>
-        <span class="slot-label" id="slot-2-label"></span>
-      </div>
-      <div class="hotbar-slot" id="slot-3">
-        <span class="slot-number">3</span>
-        <span class="slot-icon" id="slot-3-icon"></span>
-        <span class="slot-label" id="slot-3-label"></span>
-      </div>
-      <div class="hotbar-slot" id="slot-4">
-        <span class="slot-number">4</span>
-        <span class="slot-icon" id="slot-4-icon"></span>
-        <span class="slot-label" id="slot-4-label"></span>
-      </div>
-      <div class="hotbar-slot" id="slot-5">
-        <span class="slot-number">5</span>
-        <span class="slot-icon" id="slot-5-icon"></span>
-        <span class="slot-label" id="slot-5-label"></span>
-      </div>
+      <div class="hotbar-slot" id="slot-1"><span class="slot-number">1</span><span class="slot-icon" id="slot-1-icon"></span><span class="slot-label" id="slot-1-label"></span></div>
+      <div class="hotbar-slot" id="slot-2"><span class="slot-number">2</span><span class="slot-icon" id="slot-2-icon"></span><span class="slot-label" id="slot-2-label"></span></div>
+      <div class="hotbar-slot" id="slot-3"><span class="slot-number">3</span><span class="slot-icon" id="slot-3-icon"></span><span class="slot-label" id="slot-3-label"></span></div>
+      <div class="hotbar-slot" id="slot-4"><span class="slot-number">4</span><span class="slot-icon" id="slot-4-icon"></span><span class="slot-label" id="slot-4-label"></span></div>
+      <div class="hotbar-slot" id="slot-5"><span class="slot-number">5</span><span class="slot-icon" id="slot-5-icon"></span><span class="slot-label" id="slot-5-label"></span></div>
     </div>
 
     <div id="pickup-notice"></div>
     <div id="interact-hint">[ E ] Recoger</div>
+    <div id="fuse-hint">⚡ Sin energía — Activa el fuse box primero</div>
+
+    <!-- ── Power status badge ── -->
+    <div id="power-status">⚡ ENERGÍA CORTADA</div>
+
+    <!-- ── Keycard overlay ── -->
+    <div id="keycard-overlay">
+      <div class="kc-title">Acceso restringido — Sala de Reuniones</div>
+      <div class="kc-door" id="kc-door">
+        <span class="kc-door-icon">🚪</span>
+        <div class="kc-reader">
+          <div class="kc-reader-light" id="kc-light"></div>
+        </div>
+      </div>
+      <div id="kc-card" class="kc-card" title="Pasar tarjeta">💳</div>
+      <div class="kc-hint">Haz click en la tarjeta para acceder</div>
+      <div class="kc-cancel" id="kc-cancel">[ ESC ] Cancelar</div>
+    </div>
 
     <div id="instructions">
       <strong>CONTROLES</strong>
       W/A/S/D — Moverse<br>
       Ratón — Mirar<br>
-      E — Recoger objeto<br>
+      E — Recoger / Interactuar<br>
       Click — Bloquear cursor
     </div>
 
+    <div id="timer"></div>
+
     <script>
-      // ── INVENTARIO (se limpia en cada recarga) ──
+      // ── INVENTARIO ──
       const inventory = [];
       const SLOT_COUNT = 5;
+      let powerOn = false;
+      let keycardOverlayOpen = false;
+      var GAME_STORAGE_KEY = 'titanic_game_state';
+      var TIMER_DURATION = 5 * 60 * 1000;
+
+      function loadGameState() {
+        var saved = localStorage.getItem(GAME_STORAGE_KEY);
+        if (saved) return JSON.parse(saved);
+        var newState = { startTime: Date.now(), inventory: [] };
+        localStorage.setItem(GAME_STORAGE_KEY, JSON.stringify(newState));
+        return newState;
+      }
+
+      function saveGameState(state) {
+        localStorage.setItem(GAME_STORAGE_KEY, JSON.stringify(state));
+      }
+
+      var gameState = loadGameState();
+      var inventory = gameState.inventory || [];
+      var SLOT_COUNT = 5;
+      var timeRemaining = TIMER_DURATION;
+      var timerInterval = null;
+
+      function formatTime(ms) {
+        var totalSeconds = Math.floor(ms / 1000);
+        var minutes = Math.floor(totalSeconds / 60);
+        var seconds = totalSeconds % 60;
+        return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+      }
+
+      function updateTimerDisplay() {
+        var timerEl = document.getElementById('timer');
+        if (!timerEl) return;
+        timerEl.textContent = formatTime(timeRemaining);
+        timerEl.classList.remove('warning', 'critical');
+        if (timeRemaining <= 60000) timerEl.classList.add('critical');
+        else if (timeRemaining <= 120000) timerEl.classList.add('warning');
+      }
+
+      function startTimer() {
+        var elapsed = Date.now() - gameState.startTime;
+        timeRemaining = Math.max(0, TIMER_DURATION - elapsed);
+        updateTimerDisplay();
+        timerInterval = setInterval(function() {
+          timeRemaining -= 1000;
+          updateTimerDisplay();
+          gameState.startTime = Date.now() - (TIMER_DURATION - timeRemaining);
+          saveGameState(gameState);
+          if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            alert('TIEMPO AGOTADO!');
+            localStorage.removeItem(GAME_STORAGE_KEY);
+            location.reload();
+          }
+        }, 1000);
+      }
 
       function updateHotbar() {
-        for (let i = 0; i < SLOT_COUNT; i++) {
-          const slot    = document.getElementById(`slot-${i + 1}`);
-          const iconEl  = document.getElementById(`slot-${i + 1}-icon`);
-          const labelEl = document.getElementById(`slot-${i + 1}-label`);
-          const entry   = inventory[i];
+        for (var i = 0; i < SLOT_COUNT; i++) {
+          var slot = document.getElementById('slot-' + (i + 1));
+          var iconEl = document.getElementById('slot-' + (i + 1) + '-icon');
+          var labelEl = document.getElementById('slot-' + (i + 1) + '-label');
+          var entry = inventory[i];
           if (entry) {
             slot.classList.add('has-item');
-            iconEl.textContent  = entry.icon;
+            iconEl.textContent = entry.icon;
             labelEl.textContent = entry.label;
           } else {
             slot.classList.remove('has-item');
-            iconEl.textContent  = '';
+            iconEl.textContent = '';
             labelEl.textContent = '';
           }
         }
       }
 
-      let noticeTimer = null;
+      function saveInventory() {
+        gameState.inventory = inventory;
+        saveGameState(gameState);
+      }
+
+      var noticeTimer = null;
       function showNotice(text) {
-        const el = document.getElementById('pickup-notice');
+        var el = document.getElementById('pickup-notice');
         el.textContent = text;
         el.classList.add('show');
         if (noticeTimer) clearTimeout(noticeTimer);
@@ -403,58 +669,190 @@
       }
 
       function pickupItem(entity) {
-        const item  = entity.getAttribute('data-item');
-        const label = entity.getAttribute('data-label');
-        const icon  = entity.getAttribute('data-icon');
-
+        var item = entity.getAttribute('data-item');
+        var label = entity.getAttribute('data-label');
+        var icon = entity.getAttribute('data-icon');
         if (!item) return;
-        if (inventory.find(e => e.item === item)) return;
+        for (var j = 0; j < inventory.length; j++) {
+          if (inventory[j].item === item) return;
+        }
         if (inventory.length >= SLOT_COUNT) {
-          showNotice('⚠  Inventario lleno');
+          showNotice('Inventario lleno');
           return;
         }
-
-        inventory.push({ item, label, icon });
+        inventory.push({ item: item, label: label, icon: icon });
         entity.setAttribute('visible', 'false');
         entity.removeAttribute('class');
-
         updateHotbar();
-        showNotice(`+  ${icon}  ${label} recogido`);
+        saveInventory();
+        showNotice('+ ' + icon + ' ' + label);
       }
 
-      const hint = document.getElementById('interact-hint');
-      let hoveredPickable = null;
+      // ── FUSE BOX — Activar corriente ──
+      function activatePower() {
+        if (powerOn) return;
+        powerOn = true;
 
-      document.addEventListener('keydown', (e) => {
+        // Subir luz ambiental
+        document.querySelector('#ambient-light').setAttribute('light', 'type: ambient; color: #fff8e0; intensity: 0.85');
+
+        // Encender luz puntual
+        document.querySelector('#room-point-light').setAttribute('light', 'type: point; color: #fff8e0; intensity: 1.8; distance: 20; decay: 1.5');
+
+        // Indicador encima del fuse box → verde
+        const fuseLight = document.querySelector('#fuse-light');
+        fuseLight.setAttribute('color', '#00ff66');
+        fuseLight.setAttribute('material', 'emissive: #00ff66; emissiveIntensity: 2');
+
+        // Badge de estado
+        const badge = document.getElementById('power-status');
+        badge.textContent = '⚡ ENERGÍA ACTIVA';
+        badge.classList.add('on');
+
+        // Desbloquear visualmente el botón de Sala Reuniones
+        document.getElementById('boton-3-plane').setAttribute('color', '#003311');
+        document.getElementById('boton-3-border').setAttribute('color', '#00aa44');
+        document.getElementById('boton-3-text').setAttribute('value', '🔑 Sala Reuniones');
+        document.getElementById('boton-3-text').setAttribute('color', '#44ff88');
+        document.getElementById('lock-status').setAttribute('value', '💳 Keycard requerida');
+        document.getElementById('lock-status').setAttribute('color', '#ffc83c');
+
+        showNotice('⚡  Luz encendida — Usa la keycard en la puerta');
+      }
+
+      // ── KEYCARD OVERLAY ──
+      function openKeycardOverlay() {
+        keycardOverlayOpen = true;
+        document.getElementById('keycard-overlay').classList.add('show');
+        if (document.exitPointerLock) document.exitPointerLock();
+      }
+
+      function closeKeycardOverlay() {
+        keycardOverlayOpen = false;
+        document.getElementById('keycard-overlay').classList.remove('show', 'opening');
+        document.getElementById('kc-light').classList.remove('green');
+        document.getElementById('kc-card').classList.remove('swiping');
+      }
+
+      function swipeCard() {
+        const card = document.getElementById('kc-card');
+        if (card.classList.contains('swiping')) return;
+
+        card.classList.add('swiping');
+
+        setTimeout(() => {
+          document.getElementById('kc-light').classList.add('green');
+        }, 400);
+
+        setTimeout(() => {
+          document.getElementById('keycard-overlay').classList.add('opening');
+        }, 700);
+
+        setTimeout(() => {
+          window.location.href = 'sala_reunion.html';
+        }, 1600);
+      }
+
+      document.getElementById('kc-card').addEventListener('click', swipeCard);
+      document.getElementById('kc-cancel').addEventListener('click', closeKeycardOverlay);
+
+      // ── Intentar entrar a Sala Reuniones ──
+      let fuseHintTimer = null;
+      function showNoEnergy() {
+        const fh = document.getElementById('fuse-hint');
+        fh.classList.add('show');
+        if (fuseHintTimer) clearTimeout(fuseHintTimer);
+        fuseHintTimer = setTimeout(() => fh.classList.remove('show'), 2800);
+      }
+
+      function tryEnterMeetingRoom() {
+        if (!powerOn) {
+          showNoEnergy();
+          return;
+        }
+        if (!hasItem('keycard')) {
+          showNotice('🔑  Necesitas una keycard para acceder');
+          return;
+        }
+        openKeycardOverlay();
+      }
+
+      // ── HINTS & HOVER ──
+      const hint = document.getElementById('interact-hint');
+      let hoveredPickable     = null;
+      let hoveredInteractable = null;
+      var hint = document.getElementById('interact-hint');
+      var hoveredPickable = null;
+
+      document.addEventListener('keydown', function(e) {
         if ((e.key === 'e' || e.key === 'E') && hoveredPickable) {
           pickupItem(hoveredPickable);
           hoveredPickable = null;
           hint.classList.remove('show');
+      document.addEventListener('keydown', (e) => {
+        if (keycardOverlayOpen) {
+          if (e.key === 'Escape') closeKeycardOverlay();
+          if (e.key === 'Enter' || e.key === ' ') swipeCard();
+          return;
+        }
+        if (e.key === 'e' || e.key === 'E') {
+          if (hoveredPickable) {
+            pickupItem(hoveredPickable);
+            hoveredPickable = null;
+            hint.classList.remove('show');
+          } else if (hoveredInteractable) {
+            const action = hoveredInteractable.getAttribute('data-action');
+            if (action === 'fusebox') activatePower();
+          }
         }
       });
 
-      document.querySelector('a-scene').addEventListener('loaded', () => {
-
+      document.querySelector('a-scene').addEventListener('loaded', function() {
         function registerPickable(el) {
-          el.addEventListener('mouseenter', function () {
+          el.addEventListener('mouseenter', function() {
             hoveredPickable = this;
-            hint.textContent = `[ E ]  Recoger ${this.getAttribute('data-label')}`;
+            hint.textContent = '[E] ' + this.getAttribute('data-label');
             hint.classList.add('show');
           });
-          el.addEventListener('mouseleave', function () {
-            if (hoveredPickable === this) {
-              hoveredPickable = null;
-              hint.classList.remove('show');
-            }
+          el.addEventListener('mouseleave', function() {
+            if (hoveredPickable === this) { hoveredPickable = null; hint.classList.remove('show'); }
           });
-          el.addEventListener('click', function () {
+          el.addEventListener('click', function() {
             pickupItem(this);
             hoveredPickable = null;
             hint.classList.remove('show');
           });
         }
 
+        var pickables = document.querySelectorAll('.pickable');
+        for (var k = 0; k < pickables.length; k++) {
+          registerPickable(pickables[k]);
+        }
+
+        for (var m = 0; m < inventory.length; m++) {
+          var itemEl = document.querySelector('[data-item="' + inventory[m].item + '"]');
+          if (itemEl) itemEl.setAttribute('visible', 'false');
+        }
+
+        document.querySelector('#boton-escaleras').addEventListener('click', function() { window.location.href = 'pasillo-2.html'; });
+        document.querySelector('#boton-2').addEventListener('click', function() { window.location.href = 'armeria.html'; });
+        document.querySelector('#boton-3').addEventListener('click', function() { window.location.href = 'sala_reunion.html'; });
         document.querySelectorAll('.pickable').forEach(registerPickable);
+
+        // ── Fuse box ──
+        const fuseBox = document.querySelector('#fuse-box');
+        fuseBox.addEventListener('mouseenter', () => {
+          hoveredInteractable = fuseBox;
+          hint.textContent = powerOn ? '⚡  Luz ya encendida' : '[ E ]  Activar Fuse Box';
+          hint.classList.add('show');
+        });
+        fuseBox.addEventListener('mouseleave', () => {
+          hoveredInteractable = null;
+          hint.classList.remove('show');
+        });
+        fuseBox.addEventListener('click', () => {
+          if (!powerOn) activatePower();
+        });
 
         // ── Botón 1 ──
         const btn1 = document.querySelector('#boton-escaleras');
@@ -470,16 +868,34 @@
         plane2.addEventListener('mouseenter', () => plane2.setAttribute('color', '#444444'));
         plane2.addEventListener('mouseleave', () => plane2.setAttribute('color', '#222222'));
 
-        // ── Botón 3 ──
-        const btn3 = document.querySelector('#boton-3');
-        btn3.addEventListener('click', () => window.location.href = 'sala_reunion.html');
-        const plane3 = btn3.querySelector('a-plane');
-        plane3.addEventListener('mouseenter', () => plane3.setAttribute('color', '#444444'));
-        plane3.addEventListener('mouseleave', () => plane3.setAttribute('color', '#222222'));
+        // ── Botón 3 — Sala Reuniones ──
+        const btn3   = document.querySelector('#boton-3');
+        const plane3 = document.getElementById('boton-3-plane');
+
+        btn3.addEventListener('click', () => tryEnterMeetingRoom());
+
+        plane3.addEventListener('mouseenter', () => {
+          if (powerOn && hasItem('keycard')) {
+            plane3.setAttribute('color', '#005522');
+            hint.textContent = '[ CLICK ]  Acceder a Sala Reuniones';
+          } else if (powerOn) {
+            plane3.setAttribute('color', '#002211');
+            hint.textContent = '💳  Necesitas una Keycard';
+          } else {
+            plane3.setAttribute('color', '#330000');
+            hint.textContent = '🔒  Sin energía — Activa el fuse box';
+          }
+          hint.classList.add('show');
+        });
+        plane3.addEventListener('mouseleave', () => {
+          plane3.setAttribute('color', powerOn ? '#003311' : '#1a0000');
+          hint.classList.remove('show');
+        });
 
       });
 
       updateHotbar();
+      startTimer();
     </script>
 
   </body>
