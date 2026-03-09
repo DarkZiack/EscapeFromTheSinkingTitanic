@@ -345,6 +345,253 @@
       }
 
       #fuse-hint.show { opacity: 1; }
+
+      /* ══════════════════════════════════════════
+         KEYPAD OVERLAY — Armería
+      ══════════════════════════════════════════ */
+      #keypad-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.93);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 2100;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s;
+        font-family: 'Rajdhani', sans-serif;
+      }
+
+      #keypad-overlay.show {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      .kp-title {
+        font-size: 10px;
+        letter-spacing: 0.35em;
+        color: rgba(255, 255, 255, 0.35);
+        text-transform: uppercase;
+        margin-bottom: 28px;
+      }
+
+      .kp-panel {
+        background: rgba(8, 8, 10, 0.95);
+        border: 1px solid rgba(255, 140, 20, 0.25);
+        border-radius: 10px;
+        padding: 28px 32px 32px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+        box-shadow:
+          0 0 40px rgba(255, 120, 0, 0.08),
+          inset 0 1px 0 rgba(255,255,255,0.04);
+        position: relative;
+      }
+
+      /* Scanline texture */
+      .kp-panel::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(0,0,0,0.12) 2px,
+          rgba(0,0,0,0.12) 4px
+        );
+        border-radius: 10px;
+        pointer-events: none;
+      }
+
+      /* Header label */
+      .kp-label {
+        font-size: 10px;
+        letter-spacing: 0.25em;
+        color: rgba(255, 140, 20, 0.6);
+        text-transform: uppercase;
+        align-self: flex-start;
+      }
+
+      /* Display screen */
+      .kp-display {
+        width: 220px;
+        height: 52px;
+        background: rgba(0, 8, 0, 0.9);
+        border: 1px solid rgba(255, 140, 20, 0.3);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 16px;
+        gap: 10px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .kp-display::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(0,30,0,0.4) 0%, transparent 100%);
+        pointer-events: none;
+      }
+
+      .kp-digit {
+        font-size: 30px;
+        font-weight: 700;
+        color: #00ff88;
+        letter-spacing: 0.08em;
+        text-shadow: 0 0 10px rgba(0, 255, 120, 0.7), 0 0 24px rgba(0, 255, 80, 0.3);
+        font-variant-numeric: tabular-nums;
+        min-width: 20px;
+        text-align: center;
+        transition: opacity 0.1s;
+      }
+
+      .kp-display.error .kp-digit {
+        color: #ff3333;
+        text-shadow: 0 0 10px rgba(255, 50, 50, 0.8);
+        animation: shake-digits 0.35s ease;
+      }
+
+      .kp-display.success .kp-digit {
+        color: #44ff88;
+        text-shadow: 0 0 14px rgba(60, 255, 120, 1);
+      }
+
+      @keyframes shake-digits {
+        0%   { transform: translateX(0); }
+        20%  { transform: translateX(-6px); }
+        40%  { transform: translateX(6px); }
+        60%  { transform: translateX(-4px); }
+        80%  { transform: translateX(4px); }
+        100% { transform: translateX(0); }
+      }
+
+      /* Status LED */
+      .kp-led {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #ff3333;
+        box-shadow: 0 0 8px #ff3333;
+        flex-shrink: 0;
+        align-self: center;
+        transition: background 0.3s, box-shadow 0.3s;
+        order: -1;
+      }
+      .kp-led.green { background: #44ff88; box-shadow: 0 0 10px #44ff88; }
+
+      /* Numpad grid */
+      .kp-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 64px);
+        grid-template-rows: repeat(4, 56px);
+        gap: 8px;
+      }
+
+      .kp-btn {
+        background: rgba(20, 18, 14, 0.9);
+        border: 1px solid rgba(255, 140, 20, 0.2);
+        border-radius: 5px;
+        color: rgba(255, 220, 160, 0.9);
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.12s, border-color 0.12s, transform 0.08s, box-shadow 0.12s;
+        letter-spacing: 0.04em;
+        position: relative;
+        user-select: none;
+      }
+
+      .kp-btn:hover {
+        background: rgba(40, 32, 12, 0.95);
+        border-color: rgba(255, 180, 40, 0.55);
+        box-shadow: 0 0 10px rgba(255, 160, 20, 0.15);
+      }
+
+      .kp-btn:active, .kp-btn.pressed {
+        transform: scale(0.91);
+        background: rgba(60, 46, 10, 0.95);
+        border-color: rgba(255, 200, 60, 0.8);
+        box-shadow: 0 0 16px rgba(255, 200, 40, 0.25);
+      }
+
+      .kp-btn.del {
+        color: rgba(255, 100, 80, 0.85);
+        font-size: 16px;
+      }
+
+      .kp-btn.enter {
+        background: rgba(10, 35, 12, 0.9);
+        border-color: rgba(40, 200, 80, 0.3);
+        color: #44dd88;
+        font-size: 13px;
+        letter-spacing: 0.12em;
+      }
+
+      .kp-btn.enter:hover {
+        background: rgba(10, 55, 18, 0.95);
+        border-color: rgba(60, 255, 100, 0.55);
+        box-shadow: 0 0 14px rgba(40, 255, 80, 0.2);
+      }
+
+      /* Wrong code flash */
+      @keyframes flash-error {
+        0%, 100% { box-shadow: none; }
+        50%       { box-shadow: 0 0 0 2px rgba(255, 40, 40, 0.6) inset; }
+      }
+
+      .kp-panel.wrong {
+        animation: flash-error 0.35s ease 2;
+      }
+
+      .kp-status-msg {
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: rgba(255, 100, 60, 0.8);
+        height: 16px;
+        transition: opacity 0.3s;
+        opacity: 0;
+      }
+
+      .kp-status-msg.show { opacity: 1; }
+      .kp-status-msg.ok   { color: #44ff88; }
+
+      .kp-cancel {
+        margin-top: 22px;
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        color: rgba(255, 255, 255, 0.22);
+        cursor: pointer;
+        text-transform: uppercase;
+        pointer-events: all;
+        transition: color 0.2s;
+      }
+
+      .kp-cancel:hover { color: rgba(255, 255, 255, 0.55); }
+
+      /* Door animation on success */
+      @keyframes kp-door-open {
+        0%   { transform: scaleX(1); opacity: 1; }
+        60%  { transform: scaleX(0.04); opacity: 0.3; }
+        100% { transform: scaleX(0); opacity: 0; }
+      }
+
+      #keypad-overlay.opening .kp-panel {
+        animation: kp-door-open 0.75s ease-in forwards;
+        transform-origin: left center;
+      }
     </style>
   </head>
   <body>
@@ -377,7 +624,7 @@
         shadow="cast: true; receive: true">
       </a-entity>
 
-      <!-- Small Fuse Box — INTERACTUABLE, activa la luz -->
+      <!-- Small Fuse Box -->
       <a-entity 
         id="fuse-box"
         gltf-model="#fuse-box-model"
@@ -389,7 +636,7 @@
         shadow="cast: true; receive: true">
       </a-entity>
 
-      <!-- Indicador luminoso encima del fuse box (rojo=OFF / verde=ON) -->
+      <!-- Indicador luminoso encima del fuse box -->
       <a-sphere
         id="fuse-light"
         position="21.56 2.3 1.545"
@@ -398,7 +645,7 @@
         material="emissive: #ff2200; emissiveIntensity: 1.5">
       </a-sphere>
 
-      <!-- Luz puntual de la habitación, controlada por el fuse box -->
+      <!-- Luz puntual de la habitación -->
       <a-entity
         id="room-point-light"
         light="type: point; color: #fff8e0; intensity: 0; distance: 20; decay: 1.5"
@@ -451,25 +698,42 @@
         </a-text>
       </a-entity>
 
-      <!-- Botón 2 - Armeria -->
+      <!-- Botón 2 - Armeria (requiere código) -->
       <a-entity
         id="boton-2"
         position="6.412 1.268 1.47"
         rotation="0 0 0">
         <a-plane
+          id="boton-2-border"
+          width="0.54"
+          height="0.24"
+          color="#003355"
+          opacity="0.5"
+          position="0 0 -0.002">
+        </a-plane>
+        <a-plane
+          id="boton-2-plane"
           width="0.5"
           height="0.2"
-          color="#222222"
-          opacity="0.85"
+          color="#001122"
+          opacity="0.9"
           class="clickable"
           cursor-listener>
         </a-plane>
         <a-text
-          value="Armeria"
+          value="🔢 Armeria"
           align="center"
-          color="#FFFFFF"
+          color="#4499ff"
           width="1.8"
           position="0 0 0.01">
+        </a-text>
+        <a-text
+          value="🔒 Código requerido"
+          align="center"
+          color="#aaccff"
+          width="1.2"
+          position="0 -0.18 0.01"
+          scale="0.5 0.5 0.5">
         </a-text>
       </a-entity>
 
@@ -616,6 +880,39 @@
       <div class="kc-cancel" id="kc-cancel">[ ESC ] Cancelar</div>
     </div>
 
+    <!-- ══════════════════════════════════════════
+         KEYPAD OVERLAY — Armería
+    ══════════════════════════════════════════ -->
+    <div id="keypad-overlay">
+      <div class="kp-title">Acceso restringido — Armería</div>
+      <div class="kp-panel" id="kp-panel">
+        <div class="kp-label">// INTRODUCE EL CÓDIGO</div>
+
+        <div class="kp-display" id="kp-display">
+          <div class="kp-led" id="kp-led"></div>
+          <!-- digits rendered by JS -->
+        </div>
+
+        <div class="kp-grid">
+          <button class="kp-btn" data-val="1">1</button>
+          <button class="kp-btn" data-val="2">2</button>
+          <button class="kp-btn" data-val="3">3</button>
+          <button class="kp-btn" data-val="4">4</button>
+          <button class="kp-btn" data-val="5">5</button>
+          <button class="kp-btn" data-val="6">6</button>
+          <button class="kp-btn" data-val="7">7</button>
+          <button class="kp-btn" data-val="8">8</button>
+          <button class="kp-btn" data-val="9">9</button>
+          <button class="kp-btn del" data-val="del">⌫</button>
+          <button class="kp-btn" data-val="0">0</button>
+          <button class="kp-btn enter" data-val="enter">ENTER</button>
+        </div>
+
+        <div class="kp-status-msg" id="kp-status"></div>
+      </div>
+      <div class="kp-cancel" id="kp-cancel">[ ESC ] Cancelar</div>
+    </div>
+
     <div id="instructions">
       <strong>CONTROLES</strong>
       W/A/S/D — Moverse<br>
@@ -630,6 +927,14 @@
       const SLOT_COUNT = 5;
       let powerOn = false;
       let keycardOverlayOpen = false;
+
+      // ══════════════════════
+      // KEYPAD STATE
+      // ══════════════════════
+      const ARMERIA_CODE = '3142';
+      let keypadOpen    = false;
+      let keypadInput   = '';
+      let keypadLocked  = false; // brief lock after wrong code
 
       function updateHotbar() {
         for (let i = 0; i < SLOT_COUNT; i++) {
@@ -682,28 +987,22 @@
         showNotice(`+  ${icon}  ${label} recogido`);
       }
 
-      // ── FUSE BOX — Activar corriente ──
+      // ── FUSE BOX ──
       function activatePower() {
         if (powerOn) return;
         powerOn = true;
 
-        // Subir luz ambiental
         document.querySelector('#ambient-light').setAttribute('light', 'type: ambient; color: #fff8e0; intensity: 0.85');
-
-        // Encender luz puntual
         document.querySelector('#room-point-light').setAttribute('light', 'type: point; color: #fff8e0; intensity: 1.8; distance: 20; decay: 1.5');
 
-        // Indicador encima del fuse box → verde
         const fuseLight = document.querySelector('#fuse-light');
         fuseLight.setAttribute('color', '#00ff66');
         fuseLight.setAttribute('material', 'emissive: #00ff66; emissiveIntensity: 2');
 
-        // Badge de estado
         const badge = document.getElementById('power-status');
         badge.textContent = '⚡ ENERGÍA ACTIVA';
         badge.classList.add('on');
 
-        // Desbloquear visualmente el botón de Sala Reuniones
         document.getElementById('boton-3-plane').setAttribute('color', '#003311');
         document.getElementById('boton-3-border').setAttribute('color', '#00aa44');
         document.getElementById('boton-3-text').setAttribute('value', '🔑 Sala Reuniones');
@@ -733,24 +1032,15 @@
         if (card.classList.contains('swiping')) return;
 
         card.classList.add('swiping');
-
-        setTimeout(() => {
-          document.getElementById('kc-light').classList.add('green');
-        }, 400);
-
-        setTimeout(() => {
-          document.getElementById('keycard-overlay').classList.add('opening');
-        }, 700);
-
-        setTimeout(() => {
-          window.location.href = 'sala_reunion.html';
-        }, 1600);
+        setTimeout(() => { document.getElementById('kc-light').classList.add('green'); }, 400);
+        setTimeout(() => { document.getElementById('keycard-overlay').classList.add('opening'); }, 700);
+        setTimeout(() => { window.location.href = 'sala_reunion.html'; }, 1600);
       }
 
       document.getElementById('kc-card').addEventListener('click', swipeCard);
       document.getElementById('kc-cancel').addEventListener('click', closeKeycardOverlay);
 
-      // ── Intentar entrar a Sala Reuniones ──
+      // ── FUSE HINT ──
       let fuseHintTimer = null;
       function showNoEnergy() {
         const fh = document.getElementById('fuse-hint');
@@ -760,16 +1050,124 @@
       }
 
       function tryEnterMeetingRoom() {
-        if (!powerOn) {
-          showNoEnergy();
-          return;
-        }
-        if (!hasItem('keycard')) {
-          showNotice('🔑  Necesitas una keycard para acceder');
-          return;
-        }
+        if (!powerOn) { showNoEnergy(); return; }
+        if (!hasItem('keycard')) { showNotice('🔑  Necesitas una keycard para acceder'); return; }
         openKeycardOverlay();
       }
+
+      // ══════════════════════════════════════════
+      // KEYPAD LOGIC — Armería
+      // ══════════════════════════════════════════
+      function renderKeypadDisplay() {
+        const display = document.getElementById('kp-display');
+        // Remove old digit spans
+        display.querySelectorAll('.kp-digit').forEach(d => d.remove());
+
+        // Show up to 4 masked dots then the current typed chars
+        const maxLen = ARMERIA_CODE.length;
+        for (let i = 0; i < maxLen; i++) {
+          const span = document.createElement('span');
+          span.className = 'kp-digit';
+          span.textContent = i < keypadInput.length ? '●' : '–';
+          display.appendChild(span);
+        }
+      }
+
+      function setKeypadStatus(msg, type) {
+        const el = document.getElementById('kp-status');
+        el.textContent = msg;
+        el.className = 'kp-status-msg show' + (type ? ' ' + type : '');
+        if (type !== 'ok') {
+          setTimeout(() => el.classList.remove('show'), 1800);
+        }
+      }
+
+      function openKeypadOverlay() {
+        keypadOpen   = true;
+        keypadInput  = '';
+        keypadLocked = false;
+        document.getElementById('kp-led').classList.remove('green');
+        document.getElementById('kp-display').classList.remove('error', 'success');
+        document.getElementById('kp-status').className = 'kp-status-msg';
+        document.getElementById('kp-status').textContent = '';
+        renderKeypadDisplay();
+        document.getElementById('keypad-overlay').classList.add('show');
+        if (document.exitPointerLock) document.exitPointerLock();
+      }
+
+      function closeKeypadOverlay() {
+        keypadOpen  = false;
+        keypadInput = '';
+        document.getElementById('keypad-overlay').classList.remove('show', 'opening');
+      }
+
+      function keypadPress(val) {
+        if (keypadLocked) return;
+
+        if (val === 'del') {
+          keypadInput = keypadInput.slice(0, -1);
+          renderKeypadDisplay();
+          return;
+        }
+
+        if (val === 'enter') {
+          submitKeypadCode();
+          return;
+        }
+
+        if (keypadInput.length >= ARMERIA_CODE.length) return;
+        keypadInput += val;
+        renderKeypadDisplay();
+
+        // Auto-submit when max digits reached
+        if (keypadInput.length === ARMERIA_CODE.length) {
+          setTimeout(submitKeypadCode, 180);
+        }
+      }
+
+      function submitKeypadCode() {
+        if (keypadLocked) return;
+
+        if (keypadInput === ARMERIA_CODE) {
+          // ✅ Correct
+          document.getElementById('kp-display').classList.add('success');
+          document.getElementById('kp-led').classList.add('green');
+          setKeypadStatus('ACCESO CONCEDIDO', 'ok');
+
+          setTimeout(() => {
+            document.getElementById('keypad-overlay').classList.add('opening');
+          }, 500);
+          setTimeout(() => {
+            window.location.href = 'armeria.html';
+          }, 1400);
+
+        } else {
+          // ❌ Wrong code
+          keypadLocked = true;
+          document.getElementById('kp-display').classList.add('error');
+          document.getElementById('kp-panel').classList.add('wrong');
+          setKeypadStatus('CÓDIGO INCORRECTO', '');
+
+          setTimeout(() => {
+            document.getElementById('kp-display').classList.remove('error');
+            document.getElementById('kp-panel').classList.remove('wrong');
+            keypadInput  = '';
+            keypadLocked = false;
+            renderKeypadDisplay();
+          }, 1000);
+        }
+      }
+
+      // Keypad button clicks
+      document.querySelectorAll('.kp-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          btn.classList.add('pressed');
+          setTimeout(() => btn.classList.remove('pressed'), 120);
+          keypadPress(btn.getAttribute('data-val'));
+        });
+      });
+
+      document.getElementById('kp-cancel').addEventListener('click', closeKeypadOverlay);
 
       // ── HINTS & HOVER ──
       const hint = document.getElementById('interact-hint');
@@ -777,11 +1175,21 @@
       let hoveredInteractable = null;
 
       document.addEventListener('keydown', (e) => {
+        // Keypad keyboard support
+        if (keypadOpen) {
+          if (e.key === 'Escape') { closeKeypadOverlay(); return; }
+          if (e.key >= '0' && e.key <= '9') { keypadPress(e.key); return; }
+          if (e.key === 'Backspace') { keypadPress('del'); return; }
+          if (e.key === 'Enter') { keypadPress('enter'); return; }
+          return;
+        }
+
         if (keycardOverlayOpen) {
           if (e.key === 'Escape') closeKeycardOverlay();
           if (e.key === 'Enter' || e.key === ' ') swipeCard();
           return;
         }
+
         if (e.key === 'e' || e.key === 'E') {
           if (hoveredPickable) {
             pickupItem(hoveredPickable);
@@ -839,12 +1247,21 @@
         plane1.addEventListener('mouseenter', () => plane1.setAttribute('color', '#444444'));
         plane1.addEventListener('mouseleave', () => plane1.setAttribute('color', '#222222'));
 
-        // ── Botón 2 ──
-        const btn2 = document.querySelector('#boton-2');
-        btn2.addEventListener('click', () => window.location.href = 'armeria.html');
-        const plane2 = btn2.querySelector('a-plane');
-        plane2.addEventListener('mouseenter', () => plane2.setAttribute('color', '#444444'));
-        plane2.addEventListener('mouseleave', () => plane2.setAttribute('color', '#222222'));
+        // ── Botón 2 — Armería (requiere código) ──
+        const btn2   = document.querySelector('#boton-2');
+        const plane2 = document.getElementById('boton-2-plane');
+
+        btn2.addEventListener('click', () => openKeypadOverlay());
+
+        plane2.addEventListener('mouseenter', () => {
+          plane2.setAttribute('color', '#002244');
+          hint.textContent = '🔢  Introducir código de acceso';
+          hint.classList.add('show');
+        });
+        plane2.addEventListener('mouseleave', () => {
+          plane2.setAttribute('color', '#001122');
+          hint.classList.remove('show');
+        });
 
         // ── Botón 3 — Sala Reuniones ──
         const btn3   = document.querySelector('#boton-3');

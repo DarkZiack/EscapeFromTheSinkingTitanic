@@ -4,9 +4,7 @@
     <meta charset="utf-8">
     <title>Habitacion VR</title>
     <meta name="description" content="Habitacion VR with A-Frame">
-    <!-- A-Frame Library -->
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <!-- A-Frame Extras for movement controls -->
     <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
   </head>
   <body>
@@ -16,6 +14,7 @@
       <a-assets>
         <a-asset-item id="habitacion-model" src="models/armeria.glb"></a-asset-item>
         <a-asset-item id="door-model" src="models/puerta.glb"></a-asset-item>
+        <a-asset-item id="crowbar-model" src="models/crowbar.glb"></a-asset-item>
       </a-assets>
 
       <!-- Room Model -->
@@ -27,13 +26,23 @@
         shadow="cast: true; receive: true">
       </a-entity>
 
+      <!-- Crowbar Model -->
+      <a-entity
+        id="crowbar"
+        gltf-model="#crowbar-model"
+        position="-1.396 0.579 5.877"
+        rotation="0 45 20"
+        scale="0.005 0.005 0.005"
+        shadow="cast: true; receive: true"
+        class="clickable">
+      </a-entity>
+
       <!-- Button to open door -->
       <a-entity
         id="boton-puerta"
         position="0.089 1.2 4.616"
         rotation="0 45 0">
         
-        <!-- Button background -->
         <a-plane
           width="0.8"
           height="0.3"
@@ -43,7 +52,6 @@
           door-click>
         </a-plane>
 
-        <!-- Button text -->
         <a-text
           value="Abrir Puerta"
           align="center"
@@ -54,7 +62,7 @@
         
       </a-entity>
 
-      <!-- Floor plane for reference (can be invisible) -->
+      <!-- Floor plane -->
       <a-plane 
         position="0 0.01 0" 
         rotation="-90 0 0" 
@@ -65,13 +73,12 @@
         shadow="receive: true">
       </a-plane>
 
-      <!-- Player Rig with Movement Controls -->
+      <!-- Player Rig -->
       <a-entity 
         id="player-rig"
         movement-controls="speed: 0.15; fly: false; constrains: { min: {y: 0}, max: {y: 10} }"
         position="0 0 5">
         
-        <!-- Camera -->
         <a-entity 
           id="camera"
           camera 
@@ -79,7 +86,6 @@
           look-controls="pointerLockEnabled: true"
           wasd-controls="enabled: false; acceleration: 30">
           
-          <!-- Cursor for interaction feedback -->
           <a-cursor 
             color="#FFF" 
             opacity="0.5"
@@ -89,7 +95,6 @@
           </a-cursor>
         </a-entity>
         
-        <!-- Simple collision sphere -->
         <a-sphere 
           radius="0.5" 
           position="0 0 0" 
@@ -114,18 +119,15 @@
         <p>Click to lock cursor</p>
       </div>
 
-
     </a-scene>
 
     <script>
-      // Component to handle door click
       AFRAME.registerComponent('door-click', {
         init: function () {
           this.el.addEventListener('click', function () {
             window.location.href = 'escaleras-3.html';
           });
           
-          // Hover effects
           this.el.addEventListener('mouseenter', function () {
             this.setAttribute('color', '#444444');
           });
@@ -138,4 +140,3 @@
 
   </body>
 </html>
-
