@@ -592,12 +592,32 @@
         animation: kp-door-open 0.75s ease-in forwards;
         transform-origin: left center;
       }
+
+      #timer {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        color: #ff4444;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        z-index: 999;
+        pointer-events: none;
+        text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+        background: rgba(0,0,0,0.5);
+        padding: 5px 15px;
+        border-radius: 4px;
+        border: 1px solid rgba(255,68,68,0.5);
+      }
+
+      #timer.warning { color: #ff8800; border-color: rgba(255,136,0,0.5); }
+      #timer.critical { color: #ff0000; animation: pulse 0.5s infinite; border-color: rgba(255,0,0,0.8); }
+      @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
     </style>
   </head>
   <body>
     <a-scene>
       
-      <!-- Assets -->
       <a-assets>
         <a-asset-item id="habitacion-model" src="models/building_hallway.glb"></a-asset-item>
         <a-asset-item id="pared-model" src="models/pared-mesh.glb"></a-asset-item>
@@ -605,7 +625,6 @@
         <a-asset-item id="keycard-model" src="models/keycard_1.glb"></a-asset-item>
       </a-assets>
 
-      <!-- Room Model -->
       <a-entity 
         id="habitacion"
         gltf-model="#habitacion-model"
@@ -614,7 +633,6 @@
         shadow="cast: true; receive: true">
       </a-entity>
 
-      <!-- Pared al final del pasillo -->
       <a-entity 
         id="pared-final"
         gltf-model="#pared-model"
@@ -662,7 +680,6 @@
         shadow="cast: true; receive: true">
       </a-entity>
 
-      <!-- Keycard-1 (recogible) -->
       <a-entity 
         id="keycard-1"
         gltf-model="#keycard-model"
@@ -676,26 +693,9 @@
         shadow="cast: true; receive: true">
       </a-entity>
 
-      <!-- Botón 1 - Volver al pasillo -->
-      <a-entity
-        id="boton-escaleras"
-        position="-3.35 1.1 3.45"
-        rotation="0 90 0">
-        <a-plane
-          width="0.5"
-          height="0.2"
-          color="#222222"
-          opacity="0.85"
-          class="clickable"
-          cursor-listener>
-        </a-plane>
-        <a-text
-          value="Volver al pasillo"
-          align="center"
-          color="#FFFFFF"
-          width="1.8"
-          position="0 0 0.01">
-        </a-text>
+      <a-entity id="boton-escaleras" position="-3.35 1.1 3.45" rotation="0 90 0">
+        <a-plane width="0.5" height="0.2" color="#222222" opacity="0.85" class="clickable" cursor-listener></a-plane>
+        <a-text value="Volver al pasillo" align="center" color="#FFFFFF" width="1.8" position="0 0 0.01"></a-text>
       </a-entity>
 
       <!-- Botón 2 - Armeria (requiere código) -->
@@ -776,18 +776,12 @@
           position="0 -0.18 0.01"
           scale="0.5 0.5 0.5">
         </a-text>
+      <a-entity id="boton-3" position="15.15 1.368 5.45" rotation="0 180 0">
+        <a-plane width="0.5" height="0.2" color="#222222" opacity="0.85" class="clickable" cursor-listener></a-plane>
+        <a-text value="Sala Reuniones" align="center" color="#FFFFFF" width="1.8" position="0 0 0.01"></a-text>
       </a-entity>
 
-      <!-- Floor -->
-      <a-plane 
-        position="0 0.01 0" 
-        rotation="-90 0 0" 
-        width="100" 
-        height="100" 
-        color="#888888"
-        visible="false"
-        shadow="receive: true">
-      </a-plane>
+      <a-plane position="0 0.01 0" rotation="-90 0 0" width="100" height="100" color="#888888" visible="false" shadow="receive: true"></a-plane>
 
       <!-- Player Rig -->
       <a-entity 
@@ -811,14 +805,7 @@
             raycaster="objects: .pickable, .clickable, .interactable; far: 1">
           </a-cursor>
         </a-entity>
-        
-        <a-sphere 
-          radius="0.5" 
-          position="0 0 0" 
-          visible="false"
-          class="player-collider">
-        </a-sphere>
-        
+        <a-sphere radius="0.5" position="0 0 0" visible="false" class="player-collider"></a-sphere>
       </a-entity>
 
       <!-- Lighting -->
@@ -830,33 +817,12 @@
 
     </a-scene>
 
-    <!-- ── HOTBAR ── -->
     <div id="hotbar">
-      <div class="hotbar-slot" id="slot-1">
-        <span class="slot-number">1</span>
-        <span class="slot-icon" id="slot-1-icon"></span>
-        <span class="slot-label" id="slot-1-label"></span>
-      </div>
-      <div class="hotbar-slot" id="slot-2">
-        <span class="slot-number">2</span>
-        <span class="slot-icon" id="slot-2-icon"></span>
-        <span class="slot-label" id="slot-2-label"></span>
-      </div>
-      <div class="hotbar-slot" id="slot-3">
-        <span class="slot-number">3</span>
-        <span class="slot-icon" id="slot-3-icon"></span>
-        <span class="slot-label" id="slot-3-label"></span>
-      </div>
-      <div class="hotbar-slot" id="slot-4">
-        <span class="slot-number">4</span>
-        <span class="slot-icon" id="slot-4-icon"></span>
-        <span class="slot-label" id="slot-4-label"></span>
-      </div>
-      <div class="hotbar-slot" id="slot-5">
-        <span class="slot-number">5</span>
-        <span class="slot-icon" id="slot-5-icon"></span>
-        <span class="slot-label" id="slot-5-label"></span>
-      </div>
+      <div class="hotbar-slot" id="slot-1"><span class="slot-number">1</span><span class="slot-icon" id="slot-1-icon"></span><span class="slot-label" id="slot-1-label"></span></div>
+      <div class="hotbar-slot" id="slot-2"><span class="slot-number">2</span><span class="slot-icon" id="slot-2-icon"></span><span class="slot-label" id="slot-2-label"></span></div>
+      <div class="hotbar-slot" id="slot-3"><span class="slot-number">3</span><span class="slot-icon" id="slot-3-icon"></span><span class="slot-label" id="slot-3-label"></span></div>
+      <div class="hotbar-slot" id="slot-4"><span class="slot-number">4</span><span class="slot-icon" id="slot-4-icon"></span><span class="slot-label" id="slot-4-label"></span></div>
+      <div class="hotbar-slot" id="slot-5"><span class="slot-number">5</span><span class="slot-icon" id="slot-5-icon"></span><span class="slot-label" id="slot-5-label"></span></div>
     </div>
 
     <div id="pickup-notice"></div>
@@ -921,6 +887,8 @@
       Click — Bloquear cursor
     </div>
 
+    <div id="timer"></div>
+
     <script>
       // ── INVENTARIO ──
       const inventory = [];
@@ -935,56 +903,111 @@
       let keypadOpen    = false;
       let keypadInput   = '';
       let keypadLocked  = false; // brief lock after wrong code
+      var GAME_STORAGE_KEY = 'titanic_game_state';
+      var TIMER_DURATION = 5 * 60 * 1000;
+
+      function loadGameState() {
+        var saved = localStorage.getItem(GAME_STORAGE_KEY);
+        if (saved) return JSON.parse(saved);
+        var newState = { startTime: Date.now(), inventory: [] };
+        localStorage.setItem(GAME_STORAGE_KEY, JSON.stringify(newState));
+        return newState;
+      }
+
+      function saveGameState(state) {
+        localStorage.setItem(GAME_STORAGE_KEY, JSON.stringify(state));
+      }
+
+      var gameState = loadGameState();
+      var inventory = gameState.inventory || [];
+      var SLOT_COUNT = 5;
+      var timeRemaining = TIMER_DURATION;
+      var timerInterval = null;
+
+      function formatTime(ms) {
+        var totalSeconds = Math.floor(ms / 1000);
+        var minutes = Math.floor(totalSeconds / 60);
+        var seconds = totalSeconds % 60;
+        return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+      }
+
+      function updateTimerDisplay() {
+        var timerEl = document.getElementById('timer');
+        if (!timerEl) return;
+        timerEl.textContent = formatTime(timeRemaining);
+        timerEl.classList.remove('warning', 'critical');
+        if (timeRemaining <= 60000) timerEl.classList.add('critical');
+        else if (timeRemaining <= 120000) timerEl.classList.add('warning');
+      }
+
+      function startTimer() {
+        var elapsed = Date.now() - gameState.startTime;
+        timeRemaining = Math.max(0, TIMER_DURATION - elapsed);
+        updateTimerDisplay();
+        timerInterval = setInterval(function() {
+          timeRemaining -= 1000;
+          updateTimerDisplay();
+          gameState.startTime = Date.now() - (TIMER_DURATION - timeRemaining);
+          saveGameState(gameState);
+          if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            alert('TIEMPO AGOTADO!');
+            localStorage.removeItem(GAME_STORAGE_KEY);
+            location.reload();
+          }
+        }, 1000);
+      }
 
       function updateHotbar() {
-        for (let i = 0; i < SLOT_COUNT; i++) {
-          const slot    = document.getElementById(`slot-${i + 1}`);
-          const iconEl  = document.getElementById(`slot-${i + 1}-icon`);
-          const labelEl = document.getElementById(`slot-${i + 1}-label`);
-          const entry   = inventory[i];
+        for (var i = 0; i < SLOT_COUNT; i++) {
+          var slot = document.getElementById('slot-' + (i + 1));
+          var iconEl = document.getElementById('slot-' + (i + 1) + '-icon');
+          var labelEl = document.getElementById('slot-' + (i + 1) + '-label');
+          var entry = inventory[i];
           if (entry) {
             slot.classList.add('has-item');
-            iconEl.textContent  = entry.icon;
+            iconEl.textContent = entry.icon;
             labelEl.textContent = entry.label;
           } else {
             slot.classList.remove('has-item');
-            iconEl.textContent  = '';
+            iconEl.textContent = '';
             labelEl.textContent = '';
           }
         }
       }
 
-      let noticeTimer = null;
+      function saveInventory() {
+        gameState.inventory = inventory;
+        saveGameState(gameState);
+      }
+
+      var noticeTimer = null;
       function showNotice(text) {
-        const el = document.getElementById('pickup-notice');
+        var el = document.getElementById('pickup-notice');
         el.textContent = text;
         el.classList.add('show');
         if (noticeTimer) clearTimeout(noticeTimer);
         noticeTimer = setTimeout(() => el.classList.remove('show'), 2400);
       }
 
-      function hasItem(itemName) {
-        return inventory.some(e => e.item === itemName);
-      }
-
       function pickupItem(entity) {
-        const item  = entity.getAttribute('data-item');
-        const label = entity.getAttribute('data-label');
-        const icon  = entity.getAttribute('data-icon');
-
+        var item = entity.getAttribute('data-item');
+        var label = entity.getAttribute('data-label');
+        var icon = entity.getAttribute('data-icon');
         if (!item) return;
-        if (inventory.find(e => e.item === item)) return;
+        for (var j = 0; j < inventory.length; j++) {
+          if (inventory[j].item === item) return;
+        }
         if (inventory.length >= SLOT_COUNT) {
-          showNotice('⚠  Inventario lleno');
+          showNotice('Inventario lleno');
           return;
         }
-
-        inventory.push({ item, label, icon });
+        inventory.push({ item: item, label: label, icon: icon });
         entity.setAttribute('visible', 'false');
         entity.removeAttribute('class');
-
         updateHotbar();
-        showNotice(`+  ${icon}  ${label} recogido`);
+        saveInventory();
+        showNotice('+ ' + icon + ' ' + label);
       }
 
       // ── FUSE BOX ──
@@ -1173,7 +1196,14 @@
       const hint = document.getElementById('interact-hint');
       let hoveredPickable     = null;
       let hoveredInteractable = null;
+      var hint = document.getElementById('interact-hint');
+      var hoveredPickable = null;
 
+      document.addEventListener('keydown', function(e) {
+        if ((e.key === 'e' || e.key === 'E') && hoveredPickable) {
+          pickupItem(hoveredPickable);
+          hoveredPickable = null;
+          hint.classList.remove('show');
       document.addEventListener('keydown', (e) => {
         // Keypad keyboard support
         if (keypadOpen) {
@@ -1202,27 +1232,36 @@
         }
       });
 
-      document.querySelector('a-scene').addEventListener('loaded', () => {
-
+      document.querySelector('a-scene').addEventListener('loaded', function() {
         function registerPickable(el) {
-          el.addEventListener('mouseenter', function () {
+          el.addEventListener('mouseenter', function() {
             hoveredPickable = this;
-            hint.textContent = `[ E ]  Recoger ${this.getAttribute('data-label')}`;
+            hint.textContent = '[E] ' + this.getAttribute('data-label');
             hint.classList.add('show');
           });
-          el.addEventListener('mouseleave', function () {
-            if (hoveredPickable === this) {
-              hoveredPickable = null;
-              hint.classList.remove('show');
-            }
+          el.addEventListener('mouseleave', function() {
+            if (hoveredPickable === this) { hoveredPickable = null; hint.classList.remove('show'); }
           });
-          el.addEventListener('click', function () {
+          el.addEventListener('click', function() {
             pickupItem(this);
             hoveredPickable = null;
             hint.classList.remove('show');
           });
         }
 
+        var pickables = document.querySelectorAll('.pickable');
+        for (var k = 0; k < pickables.length; k++) {
+          registerPickable(pickables[k]);
+        }
+
+        for (var m = 0; m < inventory.length; m++) {
+          var itemEl = document.querySelector('[data-item="' + inventory[m].item + '"]');
+          if (itemEl) itemEl.setAttribute('visible', 'false');
+        }
+
+        document.querySelector('#boton-escaleras').addEventListener('click', function() { window.location.href = 'pasillo-2.html'; });
+        document.querySelector('#boton-2').addEventListener('click', function() { window.location.href = 'armeria.html'; });
+        document.querySelector('#boton-3').addEventListener('click', function() { window.location.href = 'sala_reunion.html'; });
         document.querySelectorAll('.pickable').forEach(registerPickable);
 
         // ── Fuse box ──
@@ -1290,6 +1329,7 @@
       });
 
       updateHotbar();
+      startTimer();
     </script>
 
   </body>

@@ -8,6 +8,197 @@
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <!-- A-Frame Extras for movement controls -->
     <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap');
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      /* ── HOTBAR ── */
+      #hotbar {
+        position: fixed;
+        bottom: 18px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 1000;
+        pointer-events: none;
+        font-family: 'Rajdhani', sans-serif;
+      }
+
+      .hotbar-slot {
+        width: 72px;
+        height: 72px;
+        background: rgba(0, 0, 0, 0.65);
+        border: 2px solid rgba(255, 255, 255, 0.18);
+        border-radius: 6px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+        overflow: hidden;
+      }
+
+      .hotbar-slot.has-item {
+        border-color: rgba(255, 200, 60, 0.75);
+        background: rgba(20, 15, 0, 0.82);
+        box-shadow: 0 0 12px rgba(255, 180, 0, 0.3), inset 0 0 20px rgba(255,180,0,0.04);
+      }
+
+      .hotbar-slot .slot-number {
+        position: absolute;
+        top: 4px;
+        left: 7px;
+        font-size: 11px;
+        color: rgba(255,255,255,0.4);
+        font-weight: 700;
+        line-height: 1;
+      }
+
+      .hotbar-slot .slot-icon {
+        font-size: 28px;
+        line-height: 1;
+        opacity: 0;
+        transform: scale(0.6);
+        transition: opacity 0.3s, transform 0.3s;
+        filter: drop-shadow(0 0 5px rgba(255,200,60,0.5));
+      }
+
+      .hotbar-slot.has-item .slot-icon {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .hotbar-slot .slot-label {
+        font-size: 9px;
+        color: rgba(255, 200, 60, 0.9);
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        margin-top: 4px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        text-transform: uppercase;
+        text-align: center;
+        padding: 0 3px;
+        line-height: 1.1;
+      }
+
+      .hotbar-slot.has-item .slot-label {
+        opacity: 1;
+      }
+
+      /* ── PICKUP NOTICE ── */
+      #pickup-notice {
+        position: fixed;
+        bottom: 105px;
+        left: 50%;
+        transform: translateX(-50%) translateY(10px);
+        background: rgba(0,0,0,0.78);
+        color: #ffc83c;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        padding: 7px 22px;
+        border-radius: 4px;
+        border: 1px solid rgba(255,200,60,0.4);
+        opacity: 0;
+        pointer-events: none;
+        z-index: 1001;
+        transition: opacity 0.3s, transform 0.3s;
+        white-space: nowrap;
+      }
+
+      #pickup-notice.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0px);
+      }
+
+      /* ── INTERACT HINT ── */
+      #interact-hint {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, calc(-50% + 38px));
+        color: #fff;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.09em;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 1001;
+        text-shadow: 0 1px 6px rgba(0,0,0,0.9);
+        transition: opacity 0.2s;
+        text-transform: uppercase;
+        background: rgba(0,0,0,0.55);
+        padding: 4px 14px;
+        border-radius: 3px;
+        border: 1px solid rgba(255,255,255,0.12);
+      }
+
+      #interact-hint.show { opacity: 1; }
+
+      /* ── INSTRUCTIONS ── */
+      #instructions {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        color: white;
+        font-family: 'Rajdhani', sans-serif;
+        z-index: 999;
+        pointer-events: none;
+        font-size: 14px;
+        line-height: 1.8;
+        text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+      }
+
+      #instructions strong {
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        color: #ffc83c;
+        display: block;
+        margin-bottom: 2px;
+      }
+
+      /* ── TIMER ── */
+      #timer {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        color: #ff4444;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        z-index: 999;
+        pointer-events: none;
+        text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+        background: rgba(0,0,0,0.5);
+        padding: 5px 15px;
+        border-radius: 4px;
+        border: 1px solid rgba(255,68,68,0.5);
+      }
+
+      #timer.warning {
+        color: #ff8800;
+        border-color: rgba(255,136,0,0.5);
+      }
+
+      #timer.critical {
+        color: #ff0000;
+        animation: pulse 0.5s infinite;
+        border-color: rgba(255,0,0,0.8);
+      }
+
+      @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+      }
+    </style>
   </head>
   <body>
     <a-scene>
@@ -45,7 +236,7 @@
         <a-box 
           id="key-hitbox"
           width="0.5" 
-          height="0.5" 
+          height="1.5" 
           depth="0.5"
           visible="false"
           class="clickable"
@@ -53,6 +244,17 @@
         </a-box>
         
       </a-entity>
+
+      <!-- Code text -->
+      <a-text
+        value="3142"
+        position="6.578 0.337 -3.042"
+        rotation="0 -180 -25.09"
+        align="center"
+        color="#111111"
+        width="6"
+        font="mozillavr">
+      </a-text>
 
       <!-- Door (Puerta) - Visual only -->
       <a-entity 
@@ -121,11 +323,12 @@
           
           <!-- Cursor for interaction feedback -->
           <a-cursor 
+            id="cursor"
             color="#FFF" 
             opacity="0.5"
             scale="0.4 0.4 0.4"
             fuse="false"
-            raycaster="objects: .clickable">
+            raycaster="objects: .pickable, .clickable; far: 4">
           </a-cursor>
         </a-entity>
         
@@ -146,22 +349,222 @@
       <!-- Sky -->
       <a-sky color="#1a1a2e"></a-sky>
 
-      <!-- Instructions UI -->
-      <div style="position: fixed; top: 20px; left: 20px; color: white; font-family: Arial; z-index: 999; pointer-events: none;">
-        <p><strong>Controls:</strong></p>
-        <p>W/A/S/D - Move</p>
-        <p>Mouse - Look around</p>
-        <p>Click to lock cursor</p>
-      </div>
-
     </a-scene>
 
+    <!-- ── HOTBAR ── -->
+    <div id="hotbar">
+      <div class="hotbar-slot" id="slot-1">
+        <span class="slot-number">1</span>
+        <span class="slot-icon" id="slot-1-icon"></span>
+        <span class="slot-label" id="slot-1-label"></span>
+      </div>
+      <div class="hotbar-slot" id="slot-2">
+        <span class="slot-number">2</span>
+        <span class="slot-icon" id="slot-2-icon"></span>
+        <span class="slot-label" id="slot-2-label"></span>
+      </div>
+      <div class="hotbar-slot" id="slot-3">
+        <span class="slot-number">3</span>
+        <span class="slot-icon" id="slot-3-icon"></span>
+        <span class="slot-label" id="slot-3-label"></span>
+      </div>
+      <div class="hotbar-slot" id="slot-4">
+        <span class="slot-number">4</span>
+        <span class="slot-icon" id="slot-4-icon"></span>
+        <span class="slot-label" id="slot-4-label"></span>
+      </div>
+      <div class="hotbar-slot" id="slot-5">
+        <span class="slot-number">5</span>
+        <span class="slot-icon" id="slot-5-icon"></span>
+        <span class="slot-label" id="slot-5-label"></span>
+      </div>
+    </div>
+
+    <div id="pickup-notice"></div>
+    <div id="interact-hint">[ E ] Recoger</div>
+
+    <div id="instructions">
+      <strong>CONTROLES</strong>
+      W/A/S/D — Moverse<br>
+      Ratón — Mirar<br>
+      E — Recoger objeto<br>
+      Click — Bloquear cursor
+    </div>
+
+    <div id="timer"></div>
+
     <script>
+      // ─────────────────────────────────────────
+      //  PERSISTENT GAME STATE (localStorage)
+      // ─────────────────────────────────────────
+      const GAME_STORAGE_KEY = 'titanic_game_state';
+      const TIMER_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+      // Load or initialize game state
+      function loadGameState() {
+        const saved = localStorage.getItem(GAME_STORAGE_KEY);
+        if (saved) {
+          return JSON.parse(saved);
+        }
+        // New game - set start time
+        const newState = {
+          startTime: Date.now(),
+          inventory: []
+        };
+        saveGameState(newState);
+        return newState;
+      }
+
+      function saveGameState(state) {
+        localStorage.setItem(GAME_STORAGE_KEY, JSON.stringify(state));
+      }
+
+      // Get current game state
+      const gameState = loadGameState();
+      let inventory = gameState.inventory || [];
+      const SLOT_COUNT = 5;
+
+      // Timer variables
+      let timeRemaining = TIMER_DURATION;
+      let timerInterval = null;
+
+      // ── TIMER FUNCTIONS ──
+      function formatTime(ms) {
+        const totalSeconds = Math.floor(ms / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+      }
+
+      function updateTimerDisplay() {
+        const timerEl = document.getElementById('timer');
+        if (!timerEl) return;
+        
+        timerEl.textContent = formatTime(timeRemaining);
+        
+        // Update styling based on time remaining
+        timerEl.classList.remove('warning', 'critical');
+        if (timeRemaining <= 60000) { // Less than 1 minute
+          timerEl.classList.add('critical');
+        } else if (timeRemaining <= 120000) { // Less than 2 minutes
+          timerEl.classList.add('warning');
+        }
+      }
+
+      function startTimer() {
+        // Calculate elapsed time from start
+        const elapsed = Date.now() - gameState.startTime;
+        timeRemaining = Math.max(0, TIMER_DURATION - elapsed);
+        
+        updateTimerDisplay();
+        
+        timerInterval = setInterval(() => {
+          timeRemaining -= 1000;
+          updateTimerDisplay();
+          
+          // Save remaining time periodically
+          gameState.startTime = Date.now() - (TIMER_DURATION - timeRemaining);
+          saveGameState(gameState);
+          
+          if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            alert('¡TIEMPO AGOTADO! El barco se hunde...');
+            // Reset game
+            localStorage.removeItem(GAME_STORAGE_KEY);
+            location.reload();
+          }
+        }, 1000);
+      }
+
+      // ── Actualizar hotbar visual ──
+      function updateHotbar() {
+        for (let i = 0; i < SLOT_COUNT; i++) {
+          const slot    = document.getElementById(`slot-${i + 1}`);
+          const iconEl  = document.getElementById(`slot-${i + 1}-icon`);
+          const labelEl = document.getElementById(`slot-${i + 1}-label`);
+          const entry   = inventory[i];
+          if (entry) {
+            slot.classList.add('has-item');
+            iconEl.textContent  = entry.icon;
+            labelEl.textContent = entry.label;
+          } else {
+            slot.classList.remove('has-item');
+            iconEl.textContent  = '';
+            labelEl.textContent = '';
+          }
+        }
+      }
+
+      // ── Save inventory to localStorage ──
+      function saveInventory() {
+        gameState.inventory = inventory;
+        saveGameState(gameState);
+      }
+
+      // ── Mostrar aviso de recogida ──
+      let noticeTimer = null;
+      function showNotice(text) {
+        const el = document.getElementById('pickup-notice');
+        el.textContent = text;
+        el.classList.add('show');
+        if (noticeTimer) clearTimeout(noticeTimer);
+        noticeTimer = setTimeout(() => el.classList.remove('show'), 2400);
+      }
+
+      // ── Lógica de recogida ──
+      function pickupItem(entity) {
+        const item  = entity.getAttribute('data-item');
+        const label = entity.getAttribute('data-label');
+        const icon  = entity.getAttribute('data-icon');
+
+        if (!item) return;
+        if (inventory.find(e => e.item === item)) return;
+        if (inventory.length >= SLOT_COUNT) {
+          showNotice('⚠  Inventario lleno');
+          return;
+        }
+
+        inventory.push({ item, label, icon });
+        entity.setAttribute('visible', 'false');
+        entity.classList.remove('pickable');
+        entity.removeAttribute('class');
+
+        updateHotbar();
+        saveInventory();
+        showNotice(`+  ${icon}  ${label} recogido`);
+
+        // Set global flag for key
+        if (item === 'key') {
+          window.hasKey = true;
+        }
+      }
+
+      const hint = document.getElementById('interact-hint');
+      let hoveredPickable = null;
+
+      document.addEventListener('keydown', (e) => {
+        if ((e.key === 'e' || e.key === 'E') && hoveredPickable) {
+          pickupItem(hoveredPickable);
+          hoveredPickable = null;
+          hint.classList.remove('show');
+        }
+      });
+
       // Component to handle key click
       AFRAME.registerComponent('key-click', {
         init: function () {
           this.el.addEventListener('click', function () {
+            // Add key to inventory
             const keyEntity = document.querySelector('#key');
+            const keyData = { item: 'key', label: 'Llave', icon: '🗝️' };
+            
+            if (!inventory.find(e => e.item === 'key')) {
+              inventory.push(keyData);
+              updateHotbar();
+              saveInventory();
+              showNotice(`+  🗝️  Llave recogida`);
+            }
+            
             keyEntity.setAttribute('visible', false);
             window.hasKey = true;
             console.log('Key collected! Door is now unlocked.');
@@ -180,7 +583,6 @@
             }
           });
           
-          // Hover effects
           this.el.addEventListener('mouseenter', function () {
             this.setAttribute('color', '#444444');
           });
@@ -189,6 +591,42 @@
           });
         }
       });
+
+      document.querySelector('a-scene').addEventListener('loaded', () => {
+        function registerPickable(el) {
+          el.addEventListener('mouseenter', function () {
+            hoveredPickable = this;
+            hint.textContent = `[ E ]  Recoger ${this.getAttribute('data-label')}`;
+            hint.classList.add('show');
+          });
+          el.addEventListener('mouseleave', function () {
+            if (hoveredPickable === this) {
+              hoveredPickable = null;
+              hint.classList.remove('show');
+            }
+          });
+          el.addEventListener('click', function () {
+            pickupItem(this);
+            hoveredPickable = null;
+            hint.classList.remove('show');
+          });
+        }
+
+        document.querySelectorAll('.pickable').forEach(registerPickable);
+
+        // Check if key was already collected
+        if (inventory.find(e => e.item === 'key')) {
+          window.hasKey = true;
+          const keyEntity = document.querySelector('#key');
+          if (keyEntity) {
+            keyEntity.setAttribute('visible', 'false');
+          }
+        }
+      });
+
+      // Initialize
+      updateHotbar();
+      startTimer();
     </script>
 
   </body>
