@@ -194,6 +194,7 @@
       <a-assets>
         <a-asset-item id="habitacion-model" src="models/sala_reunion.glb"></a-asset-item>
         <a-asset-item id="door-model" src="models/puerta.glb"></a-asset-item>
+        <a-asset-item id="keycard-level2-model" src="models/keycard-level2.glb"></a-asset-item>
       </a-assets>
 
       <!-- Room Model -->
@@ -230,6 +231,20 @@
           position="0 0 0.01">
         </a-text>
         
+      </a-entity>
+
+      <!-- Keycard Level 2 (recogible) -->
+      <a-entity 
+        id="keycard-level2"
+        gltf-model="#keycard-level2-model"
+        position="-1.62 1.832 3.385"
+        rotation="-90 -45 0"
+        scale="1 1 1"
+        class="pickable"
+        data-item="keycard-level2"
+        data-label="Keycard Nivel 2"
+        data-icon="🔑"
+        shadow="cast: true; receive: true">
       </a-entity>
 
       <!-- Floor plane for reference (can be invisible) -->
@@ -383,7 +398,7 @@
             clearInterval(timerInterval);
             alert('¡TIEMPO AGOTADO! El barco se hunde...');
             localStorage.removeItem(GAME_STORAGE_KEY);
-            location.reload();
+            window.location.href = 'juego.html';
           }
         }, 1000);
       }

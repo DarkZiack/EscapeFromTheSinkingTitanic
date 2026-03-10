@@ -193,6 +193,8 @@
         <a-asset-item id="habitacion-model" src="models/armeria.glb"></a-asset-item>
         <a-asset-item id="door-model" src="models/puerta.glb"></a-asset-item>
         <a-asset-item id="crowbar-model" src="models/crowbar.glb"></a-asset-item>
+        <a-asset-item id="keycard-model" src="models/keycard_1.glb"></a-asset-item>
+        <a-asset-item id="keycard-level2-model" src="models/keycard-level2.glb"></a-asset-item>
       </a-assets>
 
       <!-- Room Model -->
@@ -254,6 +256,20 @@
         data-item="keycard"
         data-label="Keycard"
         data-icon="💳"
+        shadow="cast: true; receive: true">
+      </a-entity>
+
+      <!-- Keycard Level 2 (recogible) -->
+      <a-entity 
+        id="keycard-level2"
+        gltf-model="#keycard-level2-model"
+        position="-1.5 0.3 5.5"
+        rotation="90 270 -90"
+        scale="1 1 1"
+        class="pickable"
+        data-item="keycard-level2"
+        data-label="Keycard Nivel 2"
+        data-icon="🔑"
         shadow="cast: true; receive: true">
       </a-entity>
 
@@ -407,7 +423,7 @@
             clearInterval(timerInterval);
             alert('¡TIEMPO AGOTADO! El barco se hunde...');
             localStorage.removeItem(GAME_STORAGE_KEY);
-            location.reload();
+            window.location.href = 'juego.html';
           }
         }, 1000);
       }
