@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SIMULACIÓN — SALIENDO</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --green: #00ff88;
+      --red: #ff2244;
+      --cyan: #00eeff;
+      --dark: #000a05;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--dark);
+      overflow: hidden;
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--green);
+    }
+
+    #matrixCanvas {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0; opacity: 1;
+      transition: opacity 1.5s ease;
+    }
+
+    .scanlines {
+      position: fixed; inset: 0; z-index: 1;
+      background: repeating-linear-gradient(to bottom, transparent 0px, transparent 3px, rgba(0,0,0,0.18) 3px, rgba(0,0,0,0.18) 4px);
+      pointer-events: none;
+    }
+
+    .vignette {
+      position: fixed; inset: 0; z-index: 1;
+      background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.85) 100%);
+      pointer-events: none;
+    }
+
+    #tunnel {
+      position: fixed; inset: 0; z-index: 2;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+
+    .ring {
+      position: absolute; border-radius: 50%;
+      border: 2px solid var(--green);
+      box-shadow: 0 0 20px var(--green), inset 0 0 20px rgba(0,255,136,0.1);
+      animation: expandRing 3s ease-out forwards;
+      opacity: 0;
+    }
+
+    @keyframes expandRing {
+      0%   { opacity: 0.9; transform: scale(0); }
+      80%  { opacity: 0.3; }
+      100% { opacity: 0;   transform: scale(6); }
+    }
+
+    #hud {
+      position: fixed; inset: 0; z-index: 3;
+      padding: 30px 40px; pointer-events: none;
+      opacity: 1; transition: opacity 0.8s;
+    }
+
+    .hud-top {
+      display: flex; justify-content: space-between;
+      font-size: 11px; color: rgba(0,255,136,0.5);
+      letter-spacing: 3px; text-transform: uppercase;
+    }
+
+    .hud-center {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%); text-align: center;
+    }
+
+    .sim-label {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(10px, 2vw, 14px);
+      letter-spacing: 10px; color: rgba(0,255,136,0.4);
+      text-transform: uppercase; margin-bottom: 16px;
+      animation: flicker 0.1s infinite;
+    }
+
+    .big-text {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(28px, 6vw, 72px);
+      font-weight: 900; color: var(--green);
+      text-shadow: 0 0 30px var(--green), 0 0 60px rgba(0,255,136,0.3);
+      letter-spacing: 6px;
+      animation: glitchText 0.08s infinite;
+    }
+
+    .status-bar {
+      margin-top: 30px; font-size: 12px;
+      color: rgba(0,255,136,0.6); letter-spacing: 2px;
+    }
+
+    .progress-wrap {
+      margin-top: 12px; width: 320px; height: 3px;
+      background: rgba(0,255,136,0.15);
+      border: 1px solid rgba(0,255,136,0.3); overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%; background: var(--green);
+      box-shadow: 0 0 10px var(--green);
+      width: 0%;
+      animation: fillBar 3.5s ease-in-out forwards;
+      animation-delay: 0.5s;
+    }
+
+    @keyframes fillBar {
+      0% { width: 0%; } 60% { width: 78%; }
+      85% { width: 92%; } 100% { width: 100%; }
+    }
+
+    .hud-bottom {
+      position: absolute; bottom: 30px; left: 40px; right: 40px;
+      display: flex; justify-content: space-between;
+      font-size: 10px; color: rgba(0,255,136,0.3); letter-spacing: 2px;
+    }
+
+    #glitch {
+      position: fixed; inset: 0; z-index: 10;
+      pointer-events: none; opacity: 0;
+    }
+
+    .glitch-slice {
+      position: absolute; left: 0; right: 0;
+      mix-blend-mode: difference;
+    }
+
+    #flash {
+      position: fixed; inset: 0; z-index: 20;
+      background: white; opacity: 0; pointer-events: none;
+    }
+
+    #errorScreen {
+      position: fixed; inset: 0; z-index: 30;
+      background: #000;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+    }
+
+    .error-box {
+      border: 2px solid var(--red);
+      padding: 50px 60px; max-width: 680px; width: 90%;
+      box-shadow: 0 0 40px rgba(255,34,68,0.5), 0 0 120px rgba(255,34,68,0.15), inset 0 0 40px rgba(255,34,68,0.05);
+      text-align: left; position: relative;
+      animation: borderFlicker 0.5s steps(1) infinite;
+    }
+
+    @keyframes borderFlicker {
+      0%,85% { border-color:var(--red); box-shadow:0 0 40px rgba(255,34,68,.5),0 0 120px rgba(255,34,68,.15),inset 0 0 40px rgba(255,34,68,.05); }
+      86%,100% { border-color:#ff6688; box-shadow:0 0 60px rgba(255,34,68,.8),0 0 120px rgba(255,34,68,.2),inset 0 0 60px rgba(255,34,68,.08); }
+    }
+
+    .error-tag { font-family:'Orbitron',monospace; font-size:10px; letter-spacing:6px; color:var(--red); opacity:.7; margin-bottom:12px; }
+    .error-title { font-family:'Orbitron',monospace; font-size:clamp(22px,4vw,38px); font-weight:900; color:var(--red); text-shadow:0 0 20px var(--red),0 0 50px rgba(255,34,68,.4); letter-spacing:4px; margin-bottom:8px; animation:redGlitch 0.12s infinite; }
+    .error-code { font-size:12px; color:rgba(255,34,68,.5); letter-spacing:3px; margin-bottom:32px; font-family:'Orbitron',monospace; }
+    .error-divider { height:1px; background:linear-gradient(to right,var(--red),transparent); margin-bottom:28px; opacity:.4; }
+    .error-log { font-size:12px; color:rgba(255,34,68,.7); line-height:2; letter-spacing:1px; }
+    .error-log span.dim { color:rgba(255,34,68,.35); }
+    .error-log span.bright { color:var(--red); font-weight:bold; }
+    .blink-cursor { display:inline-block; width:8px; height:14px; background:var(--red); margin-left:4px; vertical-align:middle; animation:blink .7s steps(1) infinite; }
+    @keyframes blink { 0%,49%{opacity:1}50%,100%{opacity:0} }
+
+    .redirect-line { margin-top:28px; font-size:11px; color:rgba(255,34,68,.5); letter-spacing:2px; }
+    .redirect-count { color:var(--red); font-weight:bold; }
+
+    .corner { position:absolute; width:16px; height:16px; border-color:var(--red); border-style:solid; opacity:.6; }
+    .corner.tl { top:-1px; left:-1px; border-width:2px 0 0 2px; }
+    .corner.tr { top:-1px; right:-1px; border-width:2px 2px 0 0; }
+    .corner.bl { bottom:-1px; left:-1px; border-width:0 0 2px 2px; }
+    .corner.br { bottom:-1px; right:-1px; border-width:0 2px 2px 0; }
+
+    @keyframes flicker { 0%,90%,100%{opacity:1}92%{opacity:.4}95%{opacity:.8}97%{opacity:.2} }
+    @keyframes glitchText { 0%,85%,100%{text-shadow:0 0 30px var(--green),0 0 60px rgba(0,255,136,.3);transform:none}86%{transform:translate(-3px,0);text-shadow:3px 0 var(--cyan),-3px 0 var(--red)}88%{transform:translate(3px,0);text-shadow:-3px 0 var(--cyan),3px 0 var(--red)}90%{transform:none} }
+    @keyframes redGlitch { 0%,80%,100%{transform:none}82%{transform:translate(-2px,0);clip-path:inset(10% 0 40% 0)}84%{transform:translate(2px,0);clip-path:inset(60% 0 5% 0)}86%{transform:none;clip-path:none} }
+  </style>
+</head>
+<body>
+
+  <canvas id="matrixCanvas"></canvas>
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+  <div id="tunnel"></div>
+
+  <div id="hud">
+    <div class="hud-top">
+      <span>SIM_CORE v4.2.1</span>
+      <span id="clock">00:00:00:000</span>
+      <span>NODO: ΩX-9</span>
+    </div>
+    <div class="hud-center">
+      <div class="sim-label">◈ SIMULACIÓN ACTIVA ◈</div>
+      <div class="big-text">SALIENDO...</div>
+      <div class="status-bar">DESVINCULANDO CONCIENCIA DEL NÚCLEO</div>
+      <div class="progress-wrap"><div class="progress-bar"></div></div>
+    </div>
+    <div class="hud-bottom">
+      <span>MEM: 94.7% LIBRE</span>
+      <span>▓▓▓▓▓▓▓▒░</span>
+      <span>PROTOCOLO: ÉXODO-7</span>
+    </div>
+  </div>
+
+  <div id="glitch"></div>
+  <div id="flash"></div>
+
+  <div id="errorScreen">
+    <div class="error-box">
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <div class="corner bl"></div><div class="corner br"></div>
+      <div class="error-tag">// ERROR CRÍTICO DEL SISTEMA //</div>
+      <div class="error-title">FALLO DE EXTRACCIÓN</div>
+      <div class="error-code">ERR_0x4F3A :: REALIDAD_COMPROMETIDA</div>
+      <div class="error-divider"></div>
+      <div class="error-log">
+        <span class="dim">[SIM_CORE]</span> &gt; Protocolo de salida iniciado...<br>
+        <span class="dim">[SIM_CORE]</span> &gt; Desconexión neuronal: <span class="bright">FALLIDA</span><br>
+        <span class="dim">[SIM_CORE]</span> &gt; Intento de recuperación: <span class="bright">FALLIDO</span><br>
+        <span class="dim">[SIM_CORE]</span> &gt; La simulación <span class="bright">NO TE DEJARÁ IR</span><br>
+        <span class="dim">[SIM_CORE]</span> &gt; Redirigiendo a protocolo alternativo...<span class="blink-cursor"></span>
+      </div>
+      <div class="redirect-line">REDIRIGIENDO EN <span class="redirect-count" id="countdown">3</span> SEGUNDOS...</div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    resize(); window.addEventListener('resize', resize);
+
+    const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%&';
+    const fontSize = 14;
+    let cols = Math.floor(canvas.width / fontSize);
+    let drops = Array(cols).fill(1);
+
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(0,10,5,0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.font = fontSize + 'px Share Tech Mono';
+      for (let i = 0; i < drops.length; i++) {
+        const char = chars[Math.floor(Math.random() * chars.length)];
+        const b = Math.random();
+        ctx.fillStyle = b > 0.95 ? '#ffffff' : b > 0.7 ? '#00ff88' : 'rgba(0,255,136,0.4)';
+        ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    }
+    let matrixInterval = setInterval(drawMatrix, 33);
+
+    const clockEl = document.getElementById('clock');
+    let clockInterval = setInterval(() => {
+      const n = new Date();
+      clockEl.textContent = [n.getHours(),n.getMinutes(),n.getSeconds()].map(v=>String(v).padStart(2,'0')).join(':') + ':' + String(n.getMilliseconds()).padStart(3,'0');
+    }, 50);
+
+    const tunnel = document.getElementById('tunnel');
+    const sizes = [80,150,230,320,420,530,650,780];
+    function spawnRings() {
+      sizes.forEach((size, i) => {
+        const ring = document.createElement('div');
+        ring.className = 'ring';
+        ring.style.cssText = `width:${size}px;height:${size}px;animation-delay:${i*0.18}s;animation-duration:${2.5+i*0.1}s`;
+        tunnel.appendChild(ring);
+        setTimeout(() => ring.remove(), 3500);
+      });
+    }
+    spawnRings();
+    let ringLoop = setInterval(spawnRings, 1000);
+
+    function triggerGlitch(color) {
+      const glitch = document.getElementById('glitch');
+      glitch.innerHTML = '';
+      const count = Math.floor(Math.random() * 8) + 3;
+      for (let i = 0; i < count; i++) {
+        const slice = document.createElement('div');
+        slice.className = 'glitch-slice';
+        slice.style.cssText = `top:${Math.random()*100}%;height:${Math.random()*8+1}px;transform:translateX(${(Math.random()-.5)*40}px);opacity:${Math.random()*.8+.2};background:${color || (Math.random()>.5?'#00ff88':'#00eeff')}`;
+        glitch.appendChild(slice);
+      }
+      glitch.style.opacity = '1';
+      setTimeout(() => { glitch.style.opacity = '0'; glitch.innerHTML = ''; }, 80);
+    }
+
+    function scheduleGlitch() { setTimeout(() => { triggerGlitch(); scheduleGlitch(); }, Math.random()*600+200); }
+    scheduleGlitch();
+
+    setTimeout(() => {
+      let gc = 0;
+      const storm = setInterval(() => { triggerGlitch(); if(++gc>=15) clearInterval(storm); }, 80);
+    }, 3800);
+
+    setTimeout(() => {
+      canvas.style.opacity = '0.1';
+      document.getElementById('hud').style.opacity = '0';
+      clearInterval(matrixInterval);
+      matrixInterval = setInterval(() => {
+        ctx.fillStyle = 'rgba(0,0,0,0.08)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.font = fontSize + 'px Share Tech Mono';
+        for (let i = 0; i < drops.length; i++) {
+          ctx.fillStyle = `rgba(255,${Math.floor(Math.random()*50)},${Math.floor(Math.random()*50)},0.8)`;
+          ctx.fillText(chars[Math.floor(Math.random()*chars.length)], i*fontSize, drops[i]*fontSize);
+          if(drops[i]*fontSize > canvas.height && Math.random()>.975) drops[i]=0;
+          drops[i]++;
+        }
+      }, 33);
+      canvas.style.opacity = '0.4';
+    }, 4800);
+
+    setTimeout(() => {
+      const flash = document.getElementById('flash');
+      flash.style.transition = 'opacity 0.15s';
+      flash.style.opacity = '1';
+      clearInterval(ringLoop); clearInterval(clockInterval);
+    }, 5600);
+
+    setTimeout(() => {
+      const flash = document.getElementById('flash');
+      flash.style.transition = 'opacity 0.3s'; flash.style.opacity = '0';
+      const err = document.getElementById('errorScreen');
+      err.style.transition = 'opacity 0.4s'; err.style.opacity = '1'; err.style.pointerEvents = 'auto';
+      clearInterval(matrixInterval);
+      ctx.clearRect(0,0,canvas.width,canvas.height); canvas.style.opacity = '0';
+    }, 5800);
+
+    setTimeout(() => {
+      let count = 3;
+      const countEl = document.getElementById('countdown');
+      const timer = setInterval(() => {
+        countEl.textContent = --count;
+        if(count <= 0) {
+          clearInterval(timer);
+          document.getElementById('glitch').style.cssText = 'background:rgba(255,34,68,0.3);opacity:1';
+          setTimeout(() => { window.location.href = 'juego.html'; }, 400);
+        }
+      }, 1000);
+    }, 6400);
+  </script>
+</body>
+</html>

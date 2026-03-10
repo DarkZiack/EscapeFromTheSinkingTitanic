@@ -203,6 +203,12 @@
         <a-text value="Volver a Habitacion" align="center" color="#FFFFFF" width="2" position="0 0 0.01"></a-text>
       </a-entity>
 
+      <!-- Escape Button (requires keycard-level2) -->
+      <a-entity id="boton-escape" position="19.54 1.5 5.429" rotation="0 180 0">
+        <a-plane width="0.8" height="0.3" color="#880000" opacity="0.85" class="clickable"></a-plane>
+        <a-text value="ESCAPAR" align="center" color="#FF4444" width="2.5" position="0 0 0.01"></a-text>
+      </a-entity>
+
       <a-plane position="0 0.01 0" rotation="-90 0 0" width="100" height="100" visible="false" shadow="receive: true"></a-plane>
 
       <a-entity id="player-rig" movement-controls="speed: 0.15; fly: false;" position="0 0 5">
@@ -290,7 +296,7 @@
             clearInterval(timerInterval);
             alert('TIEMPO AGOTADO!');
             localStorage.removeItem(GAME_STORAGE_KEY);
-            location.reload();
+            window.location.href = 'juego.html';
           }
         }, 1000);
       }
@@ -399,6 +405,25 @@
         var botonHabitacionPlane = botonHabitacion.querySelector('a-plane');
         botonHabitacionPlane.addEventListener('mouseenter', function() { this.setAttribute('color', '#444444'); });
         botonHabitacionPlane.addEventListener('mouseleave', function() { this.setAttribute('color', '#222222'); });
+
+        // Escape button handler - requires keycard-level2
+        var botonEscape = document.querySelector('#boton-escape');
+        botonEscape.addEventListener('click', function() {
+          var hasKeycardLevel2 = false;
+          for (var p = 0; p < inventory.length; p++) {
+            if (inventory[p].item === 'keycard-level2') { hasKeycardLevel2 = true; break; }
+          }
+          if (hasKeycardLevel2) {
+            // Player escapes!
+            localStorage.removeItem(GAME_STORAGE_KEY);
+            window.location.href = 'final.html';
+          } else {
+            showNotice('🔒 Necesitas KEYCARD NIVEL 2 para escapar');
+          }
+        });
+        var botonEscapePlane = botonEscape.querySelector('a-plane');
+        botonEscapePlane.addEventListener('mouseenter', function() { this.setAttribute('color', '#aa0000'); });
+        botonEscapePlane.addEventListener('mouseleave', function() { this.setAttribute('color', '#880000'); });
 
         for (var m = 0; m < inventory.length; m++) {
           var itemEl = document.querySelector('[data-item="' + inventory[m].item + '"]');

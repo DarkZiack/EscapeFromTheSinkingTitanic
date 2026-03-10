@@ -949,7 +949,7 @@
             clearInterval(timerInterval);
             alert('TIEMPO AGOTADO!');
             localStorage.removeItem(GAME_STORAGE_KEY);
-            location.reload();
+            window.location.href = 'juego.html';
           }
         }, 1000);
       }
