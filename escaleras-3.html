@@ -156,7 +156,6 @@
         margin-bottom: 2px;
       }
 
-      /* ── Power status badge ── */
       #power-status {
         position: fixed;
         top: 20px;
@@ -183,7 +182,6 @@
         box-shadow: 0 0 14px rgba(60, 255, 100, 0.2);
       }
 
-      /* ── Keycard overlay ── */
       #keycard-overlay {
         position: fixed;
         inset: 0;
@@ -321,7 +319,6 @@
         transform-origin: left center;
       }
 
-      /* ── Fuse hint (sin energía) ── */
       #fuse-hint {
         position: fixed;
         bottom: 105px;
@@ -346,9 +343,6 @@
 
       #fuse-hint.show { opacity: 1; }
 
-      /* ══════════════════════════════════════════
-         KEYPAD OVERLAY — Armería
-      ══════════════════════════════════════════ */
       #keypad-overlay {
         position: fixed;
         inset: 0;
@@ -386,29 +380,19 @@
         flex-direction: column;
         align-items: center;
         gap: 18px;
-        box-shadow:
-          0 0 40px rgba(255, 120, 0, 0.08),
-          inset 0 1px 0 rgba(255,255,255,0.04);
+        box-shadow: 0 0 40px rgba(255, 120, 0, 0.08), inset 0 1px 0 rgba(255,255,255,0.04);
         position: relative;
       }
 
-      /* Scanline texture */
       .kp-panel::before {
         content: '';
         position: absolute;
         inset: 0;
-        background: repeating-linear-gradient(
-          0deg,
-          transparent,
-          transparent 2px,
-          rgba(0,0,0,0.12) 2px,
-          rgba(0,0,0,0.12) 4px
-        );
+        background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 4px);
         border-radius: 10px;
         pointer-events: none;
       }
 
-      /* Header label */
       .kp-label {
         font-size: 10px;
         letter-spacing: 0.25em;
@@ -417,7 +401,6 @@
         align-self: flex-start;
       }
 
-      /* Display screen */
       .kp-display {
         width: 220px;
         height: 52px;
@@ -473,7 +456,6 @@
         100% { transform: translateX(0); }
       }
 
-      /* Status LED */
       .kp-led {
         width: 9px;
         height: 9px;
@@ -487,7 +469,6 @@
       }
       .kp-led.green { background: #44ff88; box-shadow: 0 0 10px #44ff88; }
 
-      /* Numpad grid */
       .kp-grid {
         display: grid;
         grid-template-columns: repeat(3, 64px);
@@ -545,7 +526,6 @@
         box-shadow: 0 0 14px rgba(40, 255, 80, 0.2);
       }
 
-      /* Wrong code flash */
       @keyframes flash-error {
         0%, 100% { box-shadow: none; }
         50%       { box-shadow: 0 0 0 2px rgba(255, 40, 40, 0.6) inset; }
@@ -581,7 +561,6 @@
 
       .kp-cancel:hover { color: rgba(255, 255, 255, 0.55); }
 
-      /* Door animation on success */
       @keyframes kp-door-open {
         0%   { transform: scaleX(1); opacity: 1; }
         60%  { transform: scaleX(0.04); opacity: 0.3; }
@@ -595,7 +574,7 @@
 
       #timer {
         position: fixed;
-        top: 20px;
+        top: 60px;
         right: 20px;
         color: #ff4444;
         font-family: 'Rajdhani', sans-serif;
@@ -670,27 +649,39 @@
         position="10 3 3">
       </a-entity>
 
-      <!-- Box object -->
+      <!-- Box object (requires crowbar to open) -->
       <a-entity 
         id="box"
         gltf-model="models/box.glb"
         position="4.3 0.011 5.210"
         rotation="0 0 0"
         scale="1 1 1"
-        shadow="cast: true; receive: true">
+        shadow="cast: true; receive: true"
+        class="clickable interactable"
+        data-action="box">
       </a-entity>
 
+      <!-- Keycard: SIN clase pickable en el HTML, se activa solo al romper la caja -->
       <a-entity 
         id="keycard-1"
         gltf-model="#keycard-model"
-        position="4.3 0.011 5.210"
+        position="5 0.03 5.210"
         rotation="90 270 -90"
-        scale="1 1 1"
-        class="pickable"
+        scale="2.5 2.5 2.5"
         data-item="keycard"
         data-label="Keycard"
         data-icon="💳"
-        shadow="cast: true; receive: true">
+        shadow="cast: true; receive: true"
+        visible="false">
+        <!-- Hitbox invisible — tamaño aumentado para mejor detección -->
+        <a-box
+          id="keycard-hitbox"
+          width="0.3" height="0.1" depth="0.3"
+          visible="false"
+          data-item="keycard"
+          data-label="Keycard"
+          data-icon="💳">
+        </a-box>
       </a-entity>
 
       <a-entity id="boton-escaleras" position="-3.35 1.1 3.45" rotation="0 90 0">
@@ -720,21 +711,8 @@
           class="clickable"
           cursor-listener>
         </a-plane>
-        <a-text
-          value="🔢 Armeria"
-          align="center"
-          color="#4499ff"
-          width="1.8"
-          position="0 0 0.01">
-        </a-text>
-        <a-text
-          value="🔒 Código requerido"
-          align="center"
-          color="#aaccff"
-          width="1.2"
-          position="0 -0.18 0.01"
-          scale="0.5 0.5 0.5">
-        </a-text>
+        <a-text value="🔢 Armeria" align="center" color="#4499ff" width="1.8" position="0 0 0.01"></a-text>
+        <a-text value="🔒 Código requerido" align="center" color="#aaccff" width="1.2" position="0 -0.18 0.01" scale="0.5 0.5 0.5"></a-text>
       </a-entity>
 
       <!-- Botón 3 - Sala Reuniones (BLOQUEADO hasta luz ON + keycard) -->
@@ -742,40 +720,10 @@
         id="boton-3"
         position="15.15 1.368 5.45"
         rotation="0 180 0">
-        <a-plane
-          id="boton-3-border"
-          width="0.54"
-          height="0.24"
-          color="#550000"
-          opacity="0.5"
-          position="0 0 -0.002">
-        </a-plane>
-        <a-plane
-          id="boton-3-plane"
-          width="0.5"
-          height="0.2"
-          color="#1a0000"
-          opacity="0.9"
-          class="clickable"
-          cursor-listener>
-        </a-plane>
-        <a-text
-          id="boton-3-text"
-          value="🔒 Sala Reuniones"
-          align="center"
-          color="#884444"
-          width="1.8"
-          position="0 0 0.01">
-        </a-text>
-        <a-text
-          id="lock-status"
-          value="⚡ Sin energia"
-          align="center"
-          color="#ff4444"
-          width="1.2"
-          position="0 -0.18 0.01"
-          scale="0.5 0.5 0.5">
-        </a-text>
+        <a-plane id="boton-3-border" width="0.54" height="0.24" color="#550000" opacity="0.5" position="0 0 -0.002"></a-plane>
+        <a-plane id="boton-3-plane" width="0.5" height="0.2" color="#1a0000" opacity="0.9" class="clickable" cursor-listener></a-plane>
+        <a-text id="boton-3-text" value="🔒 Sala Reuniones" align="center" color="#884444" width="1.8" position="0 0 0.01"></a-text>
+        <a-text id="lock-status" value="⚡ Sin energia" align="center" color="#ff4444" width="1.2" position="0 -0.18 0.01" scale="0.5 0.5 0.5"></a-text>
       </a-entity>
 
       <a-plane position="0 0.01 0" rotation="-90 0 0" width="100" height="100" color="#888888" visible="false" shadow="receive: true"></a-plane>
@@ -799,7 +747,7 @@
             opacity="0.5"
             scale="0.4 0.4 0.4"
             fuse="false"
-            raycaster="objects: .pickable, .clickable, .interactable; far: 30">
+            raycaster="objects: .pickable, .clickable, .interactable; far: 5">
           </a-cursor>
         </a-entity>
         <a-sphere radius="0.5" position="0 0 0" visible="false" class="player-collider"></a-sphere>
@@ -825,11 +773,9 @@
     <div id="pickup-notice"></div>
     <div id="interact-hint">[ E ] Recoger</div>
     <div id="fuse-hint">⚡ Sin energía — Activa el fuse box primero</div>
-
-    <!-- ── Power status badge ── -->
     <div id="power-status">⚡ ENERGÍA CORTADA</div>
 
-    <!-- ── Keycard overlay ── -->
+    <!-- Keycard overlay -->
     <div id="keycard-overlay">
       <div class="kc-title">Acceso restringido — Sala de Reuniones</div>
       <div class="kc-door" id="kc-door">
@@ -843,19 +789,14 @@
       <div class="kc-cancel" id="kc-cancel">[ ESC ] Cancelar</div>
     </div>
 
-    <!-- ══════════════════════════════════════════
-         KEYPAD OVERLAY — Armería
-    ══════════════════════════════════════════ -->
+    <!-- Keypad overlay -->
     <div id="keypad-overlay">
       <div class="kp-title">Acceso restringido — Armería</div>
       <div class="kp-panel" id="kp-panel">
         <div class="kp-label">// INTRODUCE EL CÓDIGO</div>
-
         <div class="kp-display" id="kp-display">
           <div class="kp-led" id="kp-led"></div>
-          <!-- digits rendered by JS -->
         </div>
-
         <div class="kp-grid">
           <button class="kp-btn" data-val="1">1</button>
           <button class="kp-btn" data-val="2">2</button>
@@ -870,7 +811,6 @@
           <button class="kp-btn" data-val="0">0</button>
           <button class="kp-btn enter" data-val="enter">ENTER</button>
         </div>
-
         <div class="kp-status-msg" id="kp-status"></div>
       </div>
       <div class="kp-cancel" id="kp-cancel">[ ESC ] Cancelar</div>
@@ -887,26 +827,22 @@
     <div id="timer"></div>
 
     <script>
-      // ── INVENTARIO ──
       let inventory = [];
       const SLOT_COUNT = 5;
       let powerOn = false;
       let keycardOverlayOpen = false;
 
-      // ══════════════════════
-      // KEYPAD STATE
-      // ══════════════════════
       const ARMERIA_CODE = '3142';
       let keypadOpen = false;
       let keypadInput = '';
-      let keypadLocked = false; // brief lock after wrong code
+      let keypadLocked = false;
       const GAME_STORAGE_KEY = 'titanic_game_state';
       const TIMER_DURATION = 5 * 60 * 1000;
 
       function loadGameState() {
         const saved = localStorage.getItem(GAME_STORAGE_KEY);
         if (saved) return JSON.parse(saved);
-        const newState = { startTime: Date.now(), inventory: [] };
+        const newState = { startTime: Date.now(), inventory: [], boxBroken: false };
         localStorage.setItem(GAME_STORAGE_KEY, JSON.stringify(newState));
         return newState;
       }
@@ -917,6 +853,7 @@
 
       const gameState = loadGameState();
       inventory = gameState.inventory || [];
+      let boxBroken = gameState.boxBroken || false;
       let timeRemaining = TIMER_DURATION;
       let timerInterval = null;
 
@@ -1003,7 +940,9 @@
           return;
         }
         inventory.push({ item: item, label: label, icon: icon });
-        entity.setAttribute('visible', 'false');
+        // Ocultar tanto el modelo principal como la hitbox
+        const mainEl = document.getElementById('keycard-1');
+        if (mainEl) mainEl.setAttribute('visible', 'false');
         entity.removeAttribute('class');
         updateHotbar();
         saveInventory();
@@ -1053,7 +992,6 @@
       function swipeCard() {
         const card = document.getElementById('kc-card');
         if (card.classList.contains('swiping')) return;
-
         card.classList.add('swiping');
         setTimeout(() => { document.getElementById('kc-light').classList.add('green'); }, 400);
         setTimeout(() => { document.getElementById('keycard-overlay').classList.add('opening'); }, 700);
@@ -1078,15 +1016,10 @@
         openKeycardOverlay();
       }
 
-      // ══════════════════════════════════════════
-      // KEYPAD LOGIC — Armería
-      // ══════════════════════════════════════════
+      // ── KEYPAD ──
       function renderKeypadDisplay() {
         const display = document.getElementById('kp-display');
-        // Remove old digit spans
         display.querySelectorAll('.kp-digit').forEach(d => d.remove());
-
-        // Show up to 4 masked dots then the current typed chars
         const maxLen = ARMERIA_CODE.length;
         for (let i = 0; i < maxLen; i++) {
           const span = document.createElement('span');
@@ -1100,9 +1033,7 @@
         const el = document.getElementById('kp-status');
         el.textContent = msg;
         el.className = 'kp-status-msg show' + (type ? ' ' + type : '');
-        if (type !== 'ok') {
-          setTimeout(() => el.classList.remove('show'), 1800);
-        }
+        if (type !== 'ok') setTimeout(() => el.classList.remove('show'), 1800);
       }
 
       function openKeypadOverlay() {
@@ -1126,51 +1057,27 @@
 
       function keypadPress(val) {
         if (keypadLocked) return;
-
-        if (val === 'del') {
-          keypadInput = keypadInput.slice(0, -1);
-          renderKeypadDisplay();
-          return;
-        }
-
-        if (val === 'enter') {
-          submitKeypadCode();
-          return;
-        }
-
+        if (val === 'del') { keypadInput = keypadInput.slice(0, -1); renderKeypadDisplay(); return; }
+        if (val === 'enter') { submitKeypadCode(); return; }
         if (keypadInput.length >= ARMERIA_CODE.length) return;
         keypadInput += val;
         renderKeypadDisplay();
-
-        // Auto-submit when max digits reached
-        if (keypadInput.length === ARMERIA_CODE.length) {
-          setTimeout(submitKeypadCode, 180);
-        }
+        if (keypadInput.length === ARMERIA_CODE.length) setTimeout(submitKeypadCode, 180);
       }
 
       function submitKeypadCode() {
         if (keypadLocked) return;
-
         if (keypadInput === ARMERIA_CODE) {
-          // ✅ Correct
           document.getElementById('kp-display').classList.add('success');
           document.getElementById('kp-led').classList.add('green');
           setKeypadStatus('ACCESO CONCEDIDO', 'ok');
-
-          setTimeout(() => {
-            document.getElementById('keypad-overlay').classList.add('opening');
-          }, 500);
-          setTimeout(() => {
-            window.location.href = 'armeria.html';
-          }, 1400);
-
+          setTimeout(() => { document.getElementById('keypad-overlay').classList.add('opening'); }, 500);
+          setTimeout(() => { window.location.href = 'armeria.html'; }, 1400);
         } else {
-          // ❌ Wrong code
           keypadLocked = true;
           document.getElementById('kp-display').classList.add('error');
           document.getElementById('kp-panel').classList.add('wrong');
           setKeypadStatus('CÓDIGO INCORRECTO', '');
-
           setTimeout(() => {
             document.getElementById('kp-display').classList.remove('error');
             document.getElementById('kp-panel').classList.remove('wrong');
@@ -1181,7 +1088,6 @@
         }
       }
 
-      // Keypad button clicks
       document.querySelectorAll('.kp-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           btn.classList.add('pressed');
@@ -1198,7 +1104,6 @@
       let hoveredInteractable = null;
 
       document.addEventListener('keydown', (e) => {
-        // Keypad keyboard support
         if (keypadOpen) {
           if (e.key === 'Escape') { closeKeypadOverlay(); return; }
           if (e.key >= '0' && e.key <= '9') { keypadPress(e.key); return; }
@@ -1206,13 +1111,11 @@
           if (e.key === 'Enter') { keypadPress('enter'); return; }
           return;
         }
-
         if (keycardOverlayOpen) {
           if (e.key === 'Escape') closeKeycardOverlay();
           if (e.key === 'Enter' || e.key === ' ') swipeCard();
           return;
         }
-
         if (e.key === 'e' || e.key === 'E') {
           if (hoveredPickable) {
             pickupItem(hoveredPickable);
@@ -1226,10 +1129,12 @@
       });
 
       document.querySelector('a-scene').addEventListener('loaded', function() {
+
+        // ── registerPickable: registra eventos en un elemento recogible ──
         function registerPickable(el) {
           el.addEventListener('mouseenter', function() {
             hoveredPickable = this;
-            hint.textContent = '[E] ' + this.getAttribute('data-label');
+            hint.textContent = '[ E ]  Recoger ' + this.getAttribute('data-label');
             hint.classList.add('show');
           });
           el.addEventListener('mouseleave', function() {
@@ -1242,17 +1147,66 @@
           });
         }
 
-        var pickables = document.querySelectorAll('.pickable');
-        for (var k = 0; k < pickables.length; k++) {
-          registerPickable(pickables[k]);
+        // ── activarKeycard: hace recogible la keycard ──
+        function activarKeycard() {
+          const keycardEl = document.getElementById('keycard-1');
+          keycardEl.classList.add('pickable');
+          registerPickable(keycardEl);
         }
 
-        for (var m = 0; m < inventory.length; m++) {
-          var itemEl = document.querySelector('[data-item="' + inventory[m].item + '"]');
-          if (itemEl) itemEl.setAttribute('visible', 'false');
-        }
-
+        // Solo registrar pickables que ya existen con la clase en el HTML (ninguna keycard aquí)
         document.querySelectorAll('.pickable').forEach(registerPickable);
+
+        // Ocultar items ya recogidos
+        inventory.forEach(inv => {
+          const el = document.querySelector('[data-item="' + inv.item + '"]');
+          if (el) el.setAttribute('visible', 'false');
+        });
+
+        // ── Restaurar estado de la caja al cargar la página ──
+        const boxEl    = document.querySelector('#box');
+        const keycardEl = document.getElementById('keycard-1');
+
+        if (boxBroken) {
+          // La caja ya fue rota en una sesión anterior: mostrar keycard y activarla
+          boxEl.setAttribute('visible', 'false');
+          // Solo mostrar keycard si no está ya en el inventario
+          if (!hasItem('keycard')) {
+            keycardEl.setAttribute('visible', 'true');
+            activarKeycard();
+          }
+        } else {
+          keycardEl.setAttribute('visible', 'false');
+        }
+
+        // ── Eventos de la caja ──
+        boxEl.addEventListener('mouseenter', () => {
+          if (boxBroken) return;
+          hoveredInteractable = boxEl;
+          hint.textContent = hasItem('crowbar') ? '[ CLICK ]  Romper caja' : '[ E ]  Caja cerrada — necesitas palanca';
+          hint.classList.add('show');
+        });
+        boxEl.addEventListener('mouseleave', () => {
+          if (boxBroken) return;
+          hoveredInteractable = null;
+          hint.classList.remove('show');
+        });
+        boxEl.addEventListener('click', () => {
+          if (boxBroken) return;
+          if (hasItem('crowbar')) {
+            boxEl.setAttribute('visible', 'false');
+            keycardEl.setAttribute('visible', 'true');
+            gameState.boxBroken = true;
+            boxBroken = true;
+            hoveredInteractable = null;
+            hint.classList.remove('show');
+            saveGameState(gameState);
+            activarKeycard(); // ← activar tras romper
+            showNotice('🔓  La caja se ha roto — 💳 Recoge la Keycard');
+          } else {
+            showNotice('🔧  Necesitas una palanca para abrir');
+          }
+        });
 
         // ── Fuse box ──
         const fuseBox = document.querySelector('#fuse-box');
@@ -1265,25 +1219,20 @@
           hoveredInteractable = null;
           hint.classList.remove('show');
         });
-        fuseBox.addEventListener('click', () => {
-          if (!powerOn) activatePower();
-        });
+        fuseBox.addEventListener('click', () => { if (!powerOn) activatePower(); });
 
-        // ── Botón 1 ──
-        const btn1 = document.querySelector('#boton-escaleras');
+        // ── Botón 1 — Volver al pasillo ──
+        const btn1   = document.querySelector('#boton-escaleras');
         const plane1 = btn1.querySelector('a-plane');
-        btn1.addEventListener('click', () => window.location.href = 'pasillo-2.html');
+        btn1.addEventListener('click',   () => window.location.href = 'pasillo-2.html');
         plane1.addEventListener('click', () => window.location.href = 'pasillo-2.html');
         plane1.addEventListener('mouseenter', () => plane1.setAttribute('color', '#444444'));
         plane1.addEventListener('mouseleave', () => plane1.setAttribute('color', '#222222'));
 
-        // ── Botón 2 — Armería (requiere código) ──
-        const btn2   = document.querySelector('#boton-2');
+        // ── Botón 2 — Armería ──
         const plane2 = document.getElementById('boton-2-plane');
-
-        btn2.addEventListener('click', () => openKeypadOverlay());
+        document.querySelector('#boton-2').addEventListener('click', () => openKeypadOverlay());
         plane2.addEventListener('click', () => openKeypadOverlay());
-
         plane2.addEventListener('mouseenter', () => {
           plane2.setAttribute('color', '#002244');
           hint.textContent = '🔢  Introducir código de acceso';
@@ -1295,12 +1244,9 @@
         });
 
         // ── Botón 3 — Sala Reuniones ──
-        const btn3   = document.querySelector('#boton-3');
         const plane3 = document.getElementById('boton-3-plane');
-
-        btn3.addEventListener('click', () => tryEnterMeetingRoom());
+        document.querySelector('#boton-3').addEventListener('click', () => tryEnterMeetingRoom());
         plane3.addEventListener('click', () => tryEnterMeetingRoom());
-
         plane3.addEventListener('mouseenter', () => {
           if (powerOn && hasItem('keycard')) {
             plane3.setAttribute('color', '#005522');

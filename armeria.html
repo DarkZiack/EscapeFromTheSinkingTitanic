@@ -206,7 +206,7 @@
         shadow="cast: true; receive: true">
       </a-entity>
 
-      <!-- Crowbar Model -->
+      <!-- Crowbar Model (now pickable) -->
       <a-entity
         id="crowbar"
         gltf-model="#crowbar-model"
@@ -214,7 +214,10 @@
         rotation="0 45 20"
         scale="0.005 0.005 0.005"
         shadow="cast: true; receive: true"
-        class="clickable">
+        class="pickable clickable"
+        data-item="crowbar"
+        data-label="Crowbar"
+        data-icon="🔨">
       </a-entity>
 
       <!-- Button to open door -->
@@ -248,7 +251,7 @@
         gltf-model="#keycard-model"
         position="1.5 0.3 5.5"
         rotation="90 270 -90"
-        scale="1 1 1"
+        scale="2 2 2"
         class="pickable"
         data-item="keycard"
         data-label="Keycard"
@@ -300,7 +303,7 @@
             opacity="0.5"
             scale="0.4 0.4 0.4"
             fuse="false"
-            raycaster="objects: .pickable, .clickable; far: 0.5">
+            raycaster="objects: .pickable, .clickable; far: 0.1">
           </a-cursor>
         </a-entity>
         
@@ -321,12 +324,13 @@
       <a-sky color="#1a1a2e"></a-sky>
 
       <!-- Instructions UI -->
-      <div style="position: fixed; top: 20px; left: 20px; color: white; font-family: Arial; z-index: 999; pointer-events: none;">
-        <p><strong>Controls:</strong></p>
-        <p>W/A/S/D - Move</p>
-        <p>Mouse - Look around</p>
-        <p>Click to lock cursor</p>
-      </div>
+    <div id="instructions">
+      <strong>CONTROLES</strong>
+      W/A/S/D — Moverse<br>
+      Ratón — Mirar<br>
+      E — Recoger / Interactuar<br>
+      Click — Bloquear cursor
+    </div>
 
     </a-scene>
 
@@ -362,14 +366,7 @@
     <div id="pickup-notice"></div>
     <div id="interact-hint">[ E ] Recoger</div>
 
-    <div id="instructions">
-      <strong>CONTROLES</strong>
-      W/A/S/D — Moverse<br>
-      Ratón — Mirar<br>
-      E — Recoger objeto<br>
-      Click — Bloquear cursor
-    </div>
-
+    <!-- instructions removed to avoid overlap with escalera page -->
     <div id="timer"></div>
 
     <script>
@@ -505,19 +502,31 @@
 
       document.querySelector('a-scene').addEventListener('loaded', () => {
         function registerPickable(el) {
-          el.addEventListener('mouseenter', function () {
+          const itemName = el.getAttribute('data-item');
+          // skip if already in inventory or element not visible
+          if (inventory.find(i => i.item === itemName) || el.getAttribute('visible') === 'false') return;
+
+          const enterFn = function () {
             hoveredPickable = this;
             hint.textContent = `[ E ]  Recoger ${this.getAttribute('data-label')}`;
             hint.classList.add('show');
-          });
-          el.addEventListener('mouseleave', function () {
+          };
+          const leaveFn = function () {
             if (hoveredPickable === this) { hoveredPickable = null; hint.classList.remove('show'); }
-          });
-          el.addEventListener('click', function () {
+          };
+          const clickFn = function () {
             pickupItem(this);
             hoveredPickable = null;
             hint.classList.remove('show');
-          });
+            // detach listeners so it cannot be reactivated
+            this.removeEventListener('mouseenter', enterFn);
+            this.removeEventListener('mouseleave', leaveFn);
+            this.removeEventListener('click', clickFn);
+          };
+
+          el.addEventListener('mouseenter', enterFn);
+          el.addEventListener('mouseleave', leaveFn);
+          el.addEventListener('click', clickFn);
         }
 
         document.querySelectorAll('.pickable').forEach(registerPickable);
