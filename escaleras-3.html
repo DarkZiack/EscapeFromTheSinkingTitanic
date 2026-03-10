@@ -776,9 +776,6 @@
           position="0 -0.18 0.01"
           scale="0.5 0.5 0.5">
         </a-text>
-      <a-entity id="boton-3" position="15.15 1.368 5.45" rotation="0 180 0">
-        <a-plane width="0.5" height="0.2" color="#222222" opacity="0.85" class="clickable" cursor-listener></a-plane>
-        <a-text value="Sala Reuniones" align="center" color="#FFFFFF" width="1.8" position="0 0 0.01"></a-text>
       </a-entity>
 
       <a-plane position="0 0.01 0" rotation="-90 0 0" width="100" height="100" color="#888888" visible="false" shadow="receive: true"></a-plane>
@@ -802,7 +799,7 @@
             opacity="0.5"
             scale="0.4 0.4 0.4"
             fuse="false"
-            raycaster="objects: .pickable, .clickable, .interactable; far: 1">
+            raycaster="objects: .pickable, .clickable, .interactable; far: 30">
           </a-cursor>
         </a-entity>
         <a-sphere radius="0.5" position="0 0 0" visible="false" class="player-collider"></a-sphere>
@@ -891,7 +888,7 @@
 
     <script>
       // ── INVENTARIO ──
-      const inventory = [];
+      let inventory = [];
       const SLOT_COUNT = 5;
       let powerOn = false;
       let keycardOverlayOpen = false;
@@ -900,16 +897,16 @@
       // KEYPAD STATE
       // ══════════════════════
       const ARMERIA_CODE = '3142';
-      let keypadOpen    = false;
-      let keypadInput   = '';
-      let keypadLocked  = false; // brief lock after wrong code
-      var GAME_STORAGE_KEY = 'titanic_game_state';
-      var TIMER_DURATION = 5 * 60 * 1000;
+      let keypadOpen = false;
+      let keypadInput = '';
+      let keypadLocked = false; // brief lock after wrong code
+      const GAME_STORAGE_KEY = 'titanic_game_state';
+      const TIMER_DURATION = 5 * 60 * 1000;
 
       function loadGameState() {
-        var saved = localStorage.getItem(GAME_STORAGE_KEY);
+        const saved = localStorage.getItem(GAME_STORAGE_KEY);
         if (saved) return JSON.parse(saved);
-        var newState = { startTime: Date.now(), inventory: [] };
+        const newState = { startTime: Date.now(), inventory: [] };
         localStorage.setItem(GAME_STORAGE_KEY, JSON.stringify(newState));
         return newState;
       }
@@ -918,11 +915,10 @@
         localStorage.setItem(GAME_STORAGE_KEY, JSON.stringify(state));
       }
 
-      var gameState = loadGameState();
-      var inventory = gameState.inventory || [];
-      var SLOT_COUNT = 5;
-      var timeRemaining = TIMER_DURATION;
-      var timerInterval = null;
+      const gameState = loadGameState();
+      inventory = gameState.inventory || [];
+      let timeRemaining = TIMER_DURATION;
+      let timerInterval = null;
 
       function formatTime(ms) {
         var totalSeconds = Math.floor(ms / 1000);
@@ -979,6 +975,10 @@
       function saveInventory() {
         gameState.inventory = inventory;
         saveGameState(gameState);
+      }
+
+      function hasItem(itemName) {
+        return inventory.some(item => item.item === itemName);
       }
 
       var noticeTimer = null;
@@ -1194,16 +1194,9 @@
 
       // ── HINTS & HOVER ──
       const hint = document.getElementById('interact-hint');
-      let hoveredPickable     = null;
+      let hoveredPickable = null;
       let hoveredInteractable = null;
-      var hint = document.getElementById('interact-hint');
-      var hoveredPickable = null;
 
-      document.addEventListener('keydown', function(e) {
-        if ((e.key === 'e' || e.key === 'E') && hoveredPickable) {
-          pickupItem(hoveredPickable);
-          hoveredPickable = null;
-          hint.classList.remove('show');
       document.addEventListener('keydown', (e) => {
         // Keypad keyboard support
         if (keypadOpen) {
@@ -1259,9 +1252,6 @@
           if (itemEl) itemEl.setAttribute('visible', 'false');
         }
 
-        document.querySelector('#boton-escaleras').addEventListener('click', function() { window.location.href = 'pasillo-2.html'; });
-        document.querySelector('#boton-2').addEventListener('click', function() { window.location.href = 'armeria.html'; });
-        document.querySelector('#boton-3').addEventListener('click', function() { window.location.href = 'sala_reunion.html'; });
         document.querySelectorAll('.pickable').forEach(registerPickable);
 
         // ── Fuse box ──
@@ -1281,8 +1271,9 @@
 
         // ── Botón 1 ──
         const btn1 = document.querySelector('#boton-escaleras');
-        btn1.addEventListener('click', () => window.location.href = 'pasillo-2.html');
         const plane1 = btn1.querySelector('a-plane');
+        btn1.addEventListener('click', () => window.location.href = 'pasillo-2.html');
+        plane1.addEventListener('click', () => window.location.href = 'pasillo-2.html');
         plane1.addEventListener('mouseenter', () => plane1.setAttribute('color', '#444444'));
         plane1.addEventListener('mouseleave', () => plane1.setAttribute('color', '#222222'));
 
@@ -1291,6 +1282,7 @@
         const plane2 = document.getElementById('boton-2-plane');
 
         btn2.addEventListener('click', () => openKeypadOverlay());
+        plane2.addEventListener('click', () => openKeypadOverlay());
 
         plane2.addEventListener('mouseenter', () => {
           plane2.setAttribute('color', '#002244');
@@ -1307,6 +1299,7 @@
         const plane3 = document.getElementById('boton-3-plane');
 
         btn3.addEventListener('click', () => tryEnterMeetingRoom());
+        plane3.addEventListener('click', () => tryEnterMeetingRoom());
 
         plane3.addEventListener('mouseenter', () => {
           if (powerOn && hasItem('keycard')) {
