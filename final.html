@@ -12,10 +12,34 @@
 
     #matrixCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;}
     #noiseCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:6;pointer-events:none;opacity:0;image-rendering:pixelated;}
+    #tearCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:8;pointer-events:none;opacity:0;}
 
+    /* ── POWER OFF / CRT ON ── */
+    #powerOverlay{position:fixed;inset:0;z-index:22;background:#000;opacity:0;pointer-events:none;}
+    #crtLine{
+      position:fixed;left:0;right:0;top:0;bottom:0;z-index:23;
+      pointer-events:none;opacity:0;
+      transform:scaleY(0.001);transform-origin:center center;
+    }
+    @keyframes crtExpand{
+      0%  {transform:scaleY(0.001);opacity:1;}
+      45% {transform:scaleY(1);opacity:0.95;}
+      75% {transform:scaleY(1);opacity:0.5;}
+      100%{transform:scaleY(1);opacity:0;}
+    }
+    @keyframes crtFlicker{
+      0%,100%{opacity:1} 8%{opacity:0.6} 15%{opacity:1} 22%{opacity:0.3}
+      30%{opacity:1} 55%{opacity:0.8} 60%{opacity:1} 75%{opacity:0.5} 80%{opacity:1}
+    }
+
+    /* ── SCAN LINES / VIGNETTE ── */
     .scanlines{position:fixed;inset:0;z-index:1;background:repeating-linear-gradient(to bottom,transparent 0px,transparent 3px,rgba(0,0,0,0.2) 3px,rgba(0,0,0,0.2) 4px);pointer-events:none;}
     .vignette{position:fixed;inset:0;z-index:1;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,0.9) 100%);pointer-events:none;}
 
+    /* ── HORIZONTAL DESYNC BARS (new) ── */
+    #desyncOverlay{position:fixed;inset:0;z-index:9;pointer-events:none;opacity:0;}
+
+    /* ── SHAKE ── */
     @keyframes shake1{0%,100%{transform:translate(0)}25%{transform:translate(-4px,2px)}50%{transform:translate(4px,-2px)}75%{transform:translate(-2px,-4px)}}
     @keyframes shake2{0%,100%{transform:translate(0)}20%{transform:translate(6px,-3px)}40%{transform:translate(-6px,5px)}60%{transform:translate(3px,6px)}80%{transform:translate(-5px,-3px)}}
     @keyframes shake3{0%,100%{transform:translate(0)}10%{transform:translate(-12px,5px)}30%{transform:translate(12px,-7px)}50%{transform:translate(-9px,9px)}70%{transform:translate(9px,-5px)}90%{transform:translate(-5px,7px)}}
@@ -23,14 +47,17 @@
     .shake2{animation:shake2 0.09s infinite;}
     .shake3{animation:shake3 0.06s infinite;}
 
+    /* ── RGB SPLIT ── */
     #rgbSplit{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0;mix-blend-mode:screen;}
     #rgbSplit .r{position:absolute;inset:0;background:rgba(255,0,0,0.12);transform:translate(-4px,0);}
     #rgbSplit .b{position:absolute;inset:0;background:rgba(0,0,255,0.12);transform:translate(4px,0);}
 
+    /* ── TUNNEL ── */
     #tunnel{position:fixed;inset:0;z-index:3;display:flex;align-items:center;justify-content:center;pointer-events:none;}
     .ring{position:absolute;border-radius:50%;border:2px solid var(--green);box-shadow:0 0 20px var(--green),inset 0 0 20px rgba(0,255,136,0.1);animation:expandRing 3s ease-out forwards;opacity:0;}
     @keyframes expandRing{0%{opacity:0.9;transform:scale(0)}80%{opacity:0.3}100%{opacity:0;transform:scale(6)}}
 
+    /* ── HUD ── */
     #hud{position:fixed;inset:0;z-index:4;padding:28px 40px;pointer-events:none;transition:opacity 0.6s;}
     .hud-top{display:flex;justify-content:space-between;font-size:11px;color:rgba(0,255,136,0.5);letter-spacing:3px;text-transform:uppercase;}
     .hud-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:90%;}
@@ -42,20 +69,23 @@
     .progress-pct{font-size:11px;color:rgba(0,255,136,0.5);margin-top:8px;letter-spacing:2px;}
     .hud-bottom{position:absolute;bottom:28px;left:40px;right:40px;display:flex;justify-content:space-between;font-size:10px;color:rgba(0,255,136,0.3);letter-spacing:2px;}
 
+    /* ── RESTART OVERLAY ── */
     #restartOverlay{position:fixed;inset:0;z-index:15;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;}
     .restart-box{border:1px solid var(--yellow);padding:32px 50px;text-align:center;background:rgba(0,0,0,0.9);box-shadow:0 0 30px rgba(255,238,0,0.3),inset 0 0 20px rgba(255,238,0,0.05);min-width:520px;max-width:90%;}
     .restart-title{font-family:'Orbitron',monospace;font-size:clamp(13px,2.5vw,20px);font-weight:700;color:var(--yellow);letter-spacing:4px;text-shadow:0 0 20px var(--yellow);margin-bottom:16px;}
     .restart-log{font-size:12px;color:rgba(255,238,0,0.65);line-height:2.1;letter-spacing:1px;text-align:left;min-height:90px;}
     .ok{color:#00ff88!important;}.fail{color:var(--red)!important;font-weight:bold;}.warn{color:var(--yellow)!important;}
 
+    /* ── CORRUPT OVERLAY ── */
     #corruptOverlay{position:fixed;inset:0;z-index:8;pointer-events:none;opacity:0;font-family:'Share Tech Mono',monospace;font-size:13px;color:rgba(0,255,136,0.12);overflow:hidden;word-break:break-all;padding:10px;line-height:1.4;}
 
+    /* ── GLITCH / INVERT / FLASH ── */
     #glitch{position:fixed;inset:0;z-index:10;pointer-events:none;opacity:0;}
     .glitch-slice{position:absolute;left:0;right:0;}
     #invertLayer{position:fixed;inset:0;z-index:12;background:white;opacity:0;pointer-events:none;mix-blend-mode:difference;}
     #flash{position:fixed;inset:0;z-index:20;background:white;opacity:0;pointer-events:none;}
 
-    /* RECONFIG OVERLAY */
+    /* ── RECONFIG OVERLAY ── */
     #reconfigOverlay{position:fixed;inset:0;z-index:16;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;background:rgba(0,0,0,0.92);}
     .reconfig-box{border:1px solid var(--green);padding:40px 60px;text-align:center;background:rgba(0,5,2,0.95);box-shadow:0 0 50px rgba(0,255,136,0.2),inset 0 0 30px rgba(0,255,136,0.04);max-width:620px;width:90%;}
     .reconfig-title{font-family:'Orbitron',monospace;font-size:clamp(12px,2.5vw,18px);font-weight:700;color:var(--green);letter-spacing:6px;text-shadow:0 0 20px var(--green);margin-bottom:6px;}
@@ -71,6 +101,7 @@
     .reconfig-box.pulsing{animation:reconfigPulse 1.2s ease-in-out infinite;}
     @keyframes almostThere{0%,100%{color:var(--green);text-shadow:0 0 30px var(--green),0 0 60px rgba(0,255,136,0.3)}50%{color:#aaffcc;text-shadow:0 0 50px var(--green),0 0 100px rgba(0,255,136,0.5),0 0 150px rgba(0,255,136,0.2)}}
 
+    /* ── ERROR SCREEN ── */
     #errorScreen{position:fixed;inset:0;z-index:30;background:#000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;}
     .error-box{border:2px solid var(--red);padding:44px 55px;max-width:700px;width:90%;box-shadow:0 0 40px rgba(255,34,68,0.5),0 0 120px rgba(255,34,68,0.15),inset 0 0 40px rgba(255,34,68,0.05);position:relative;animation:bFlicker 0.5s steps(1) infinite;}
     @keyframes bFlicker{0%,85%{border-color:var(--red);box-shadow:0 0 40px rgba(255,34,68,.5),0 0 120px rgba(255,34,68,.15),inset 0 0 40px rgba(255,34,68,.05)}86%,100%{border-color:#ff6688;box-shadow:0 0 70px rgba(255,34,68,.9),0 0 140px rgba(255,34,68,.25),inset 0 0 60px rgba(255,34,68,.1)}}
@@ -83,7 +114,7 @@
     .error-log .dim{color:rgba(255,34,68,.35);}.error-log .bright{color:var(--red);font-weight:bold;}.error-log .ewarn{color:var(--yellow);}
     .blink-cursor{display:inline-block;width:8px;height:14px;background:var(--red);margin-left:4px;vertical-align:middle;animation:blink .7s steps(1) infinite;}
 
-    /* CREDITS */
+    /* ── CREDITS ── */
     #credits{position:fixed;bottom:40px;right:-400px;z-index:35;text-align:right;pointer-events:none;transition:right 1.2s cubic-bezier(0.22,1,0.36,1);}
     #credits.visible{right:40px;}
     .credits-line{font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(255,34,68,0.35);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;}
@@ -101,11 +132,18 @@
 <body>
   <canvas id="matrixCanvas"></canvas>
   <canvas id="noiseCanvas"></canvas>
+  <canvas id="tearCanvas"></canvas>
   <div class="scanlines"></div>
   <div class="vignette"></div>
   <div id="rgbSplit"><div class="r"></div><div class="b"></div></div>
   <div id="tunnel"></div>
   <div id="corruptOverlay"></div>
+  <div id="desyncOverlay"></div>
+
+  <!-- CRT power-on line (full screen, scales from thin line) -->
+  <div id="crtLine"></div>
+  <!-- Screen power overlay (black) -->
+  <div id="powerOverlay"></div>
 
   <div id="hud">
     <div class="hud-top">
@@ -177,468 +215,718 @@
   </div>
 
 <script>
-// ══════════════════════════════════════
+// ═══════════════════════════════════════
 // MATRIX
-// ══════════════════════════════════════
-const canvas=document.getElementById('matrixCanvas');
-const ctx=canvas.getContext('2d');
-function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
-resize();window.addEventListener('resize',resize);
-const chars='アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%&*!?█▓▒░';
-const FS=14;
-let drops=Array(Math.floor(canvas.width/FS)).fill(1);
-let mColor='green',mBg='rgba(0,10,5,0.05)';
-let mInterval=setInterval(drawMatrix,33);
+// ═══════════════════════════════════════
+const canvas = document.getElementById('matrixCanvas');
+const ctx = canvas.getContext('2d');
+function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%&*!?█▓▒░';
+const FS = 14;
+let drops = Array(Math.floor(canvas.width / FS)).fill(1);
+let mColor = 'green', mBg = 'rgba(0,10,5,0.05)';
+let matrixFrozen = false;
+let mInterval = setInterval(drawMatrix, 33);
 
 function drawMatrix(){
-  ctx.fillStyle=mBg;
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-  ctx.font=FS+'px Share Tech Mono';
-  for(let i=0;i<drops.length;i++){
-    const c=chars[Math.floor(Math.random()*chars.length)];
-    const b=Math.random();
-    if(mColor==='green') ctx.fillStyle=b>.95?'#fff':b>.7?'#00ff88':'rgba(0,255,136,0.35)';
-    else if(mColor==='yellow') ctx.fillStyle=b>.8?'#ffee00':`rgba(255,200,0,${0.3+b*0.4})`;
-    else if(mColor==='red') ctx.fillStyle=`rgba(255,${Math.floor(b*40)},${Math.floor(b*40)},${0.5+b*0.5})`;
-    else ctx.fillStyle=`hsl(${Math.random()*360},100%,60%)`;
-    ctx.fillText(c,i*FS,drops[i]*FS);
-    if(drops[i]*FS>canvas.height&&Math.random()>.975)drops[i]=0;
+  if(matrixFrozen) return;
+  ctx.fillStyle = mBg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.font = FS + 'px Share Tech Mono';
+  for(let i = 0; i < drops.length; i++){
+    const c = chars[Math.floor(Math.random() * chars.length)];
+    const b = Math.random();
+    if(mColor === 'green')       ctx.fillStyle = b>.95?'#fff':b>.7?'#00ff88':'rgba(0,255,136,0.35)';
+    else if(mColor === 'yellow') ctx.fillStyle = b>.8?'#ffee00':`rgba(255,200,0,${0.3+b*0.4})`;
+    else if(mColor === 'red')    ctx.fillStyle = `rgba(255,${Math.floor(b*40)},${Math.floor(b*40)},${0.5+b*0.5})`;
+    else                         ctx.fillStyle = `hsl(${Math.random()*360},100%,60%)`;
+    ctx.fillText(c, i * FS, drops[i] * FS);
+    if(drops[i] * FS > canvas.height && Math.random() > .975) drops[i] = 0;
     drops[i]++;
   }
 }
 
-// ══════════════════════════════════════
+// ═══════════════════════════════════════
 // NOISE
-// ══════════════════════════════════════
-const nc=document.getElementById('noiseCanvas');
-const nCtx=nc.getContext('2d');
-nc.width=256;nc.height=256;
-nc.style.imageRendering='pixelated';
-nc.style.width='100vw';nc.style.height='100vh';
-let noiseOp=0;
+// ═══════════════════════════════════════
+const nc = document.getElementById('noiseCanvas');
+const nCtx = nc.getContext('2d');
+nc.width = 256; nc.height = 256;
+nc.style.imageRendering = 'pixelated';
+nc.style.width = '100vw'; nc.style.height = '100vh';
+let noiseOp = 0;
 setInterval(()=>{
-  if(noiseOp<=0)return;
-  const id=nCtx.createImageData(256,256);
-  for(let i=0;i<id.data.length;i+=4){
-    const v=Math.random()*255;
-    id.data[i]=id.data[i+1]=id.data[i+2]=v;id.data[i+3]=Math.random()*80;
+  if(noiseOp <= 0) return;
+  const id = nCtx.createImageData(256,256);
+  for(let i = 0; i < id.data.length; i+=4){
+    const v = Math.random()*255;
+    id.data[i]=id.data[i+1]=id.data[i+2]=v; id.data[i+3]=Math.random()*80;
   }
   nCtx.putImageData(id,0,0);
-  nc.style.opacity=noiseOp;
+  nc.style.opacity = noiseOp;
 },50);
 
-// ══════════════════════════════════════
+// ═══════════════════════════════════════
+// TEAR CANVAS
+// ═══════════════════════════════════════
+const tearCanvas = document.getElementById('tearCanvas');
+const tearCtx = tearCanvas.getContext('2d');
+let tearAnimFrame = null;
+
+function tearScreen(duration, intensity){
+  tearCanvas.width  = window.innerWidth;
+  tearCanvas.height = window.innerHeight;
+  tearCanvas.style.opacity = '1';
+  const end = Date.now() + duration;
+  const int = intensity || 1;
+
+  function draw(){
+    tearCtx.clearRect(0,0,tearCanvas.width,tearCanvas.height);
+    const numTears = 4 + Math.floor(Math.random() * 10 * int);
+    for(let i = 0; i < numTears; i++){
+      const y   = Math.random() * tearCanvas.height;
+      const h   = 1 + Math.random() * 35 * int;
+      const off = (Math.random()-0.5) * 180 * int;
+      // Copy matrix canvas slice at offset — real tearing effect
+      try{ tearCtx.drawImage(canvas, 0, y, tearCanvas.width, h, off, y, tearCanvas.width, h); }catch(e){}
+      // Chromatic fringe at tear edge
+      if(Math.random() > 0.4){
+        tearCtx.fillStyle = `rgba(255,0,68,${0.2 + Math.random()*0.3})`;
+        tearCtx.fillRect(off, y, 2, h);
+        tearCtx.fillStyle = `rgba(0,255,136,${0.15 + Math.random()*0.25})`;
+        tearCtx.fillRect(off + tearCanvas.width - 2, y, 2, h);
+      }
+      // Occasional bright horizontal bar
+      if(Math.random() > 0.75){
+        tearCtx.fillStyle = `rgba(255,255,255,${0.04 + Math.random()*0.08})`;
+        tearCtx.fillRect(0, y, tearCanvas.width, h * 0.4);
+      }
+    }
+    if(Date.now() < end) tearAnimFrame = requestAnimationFrame(draw);
+    else{
+      tearCtx.clearRect(0,0,tearCanvas.width,tearCanvas.height);
+      tearCanvas.style.opacity = '0';
+    }
+  }
+  if(tearAnimFrame) cancelAnimationFrame(tearAnimFrame);
+  tearAnimFrame = requestAnimationFrame(draw);
+}
+
+// ═══════════════════════════════════════
+// FPS DROP / STUTTER
+// ═══════════════════════════════════════
+function fpsStutter(freezeMs, color){
+  // Freeze matrix, then resume choppily
+  matrixFrozen = true;
+  noiseOp = Math.max(noiseOp, 0.25);
+  // Show a freeze frame artifact
+  ctx.fillStyle = (color||'rgba(255,34,68,0.04)');
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  const chopFrames = [0, 200, 100, 250, 80, 160, 90];
+  let idx = 0;
+  function chopResume(){
+    if(idx >= chopFrames.length){ matrixFrozen = false; return; }
+    setTimeout(()=>{
+      drawMatrix();
+      idx++;
+      chopResume();
+    }, chopFrames[idx]);
+  }
+  setTimeout(chopResume, freezeMs);
+}
+
+// ═══════════════════════════════════════
+// DESYNC BARS (horizontal displacement bars)
+// ═══════════════════════════════════════
+const desync = document.getElementById('desyncOverlay');
+let desyncTimer = null;
+
+function startDesync(color, count){
+  desync.innerHTML = '';
+  desync.style.opacity = '1';
+  const c = color || 'rgba(0,255,136,0.15)';
+  const n = count || 6;
+  for(let i = 0; i < n; i++){
+    const bar = document.createElement('div');
+    const h   = 2 + Math.random() * 20;
+    const y   = Math.random() * 100;
+    const off = (Math.random()-0.5)*80;
+    bar.style.cssText = `position:absolute;left:0;right:0;top:${y}%;height:${h}px;background:${c};transform:translateX(${off}px);mix-blend-mode:screen;`;
+    desync.appendChild(bar);
+  }
+}
+
+function stopDesync(){
+  desync.style.opacity = '0';
+  desync.innerHTML = '';
+  clearInterval(desyncTimer);
+}
+
+function pulseDesync(color, intervalMs, duration){
+  clearInterval(desyncTimer);
+  desyncTimer = setInterval(()=> startDesync(color), intervalMs || 80);
+  if(duration) setTimeout(stopDesync, duration);
+}
+
+// ═══════════════════════════════════════
 // CLOCK
-// ══════════════════════════════════════
-const clockEl=document.getElementById('clock');
-let clockGlitch=false;
-const clockTick=setInterval(()=>{
-  if(clockGlitch){clockEl.textContent=Array(12).fill(0).map(()=>chars[Math.floor(Math.random()*chars.length)]).join('');return;}
-  const n=new Date();
-  clockEl.textContent=[n.getHours(),n.getMinutes(),n.getSeconds()].map(v=>String(v).padStart(2,'0')).join(':')+':'+String(n.getMilliseconds()).padStart(3,'0');
+// ═══════════════════════════════════════
+const clockEl = document.getElementById('clock');
+let clockGlitch = false;
+const clockTick = setInterval(()=>{
+  if(clockGlitch){ clockEl.textContent = Array(12).fill(0).map(()=>chars[Math.floor(Math.random()*chars.length)]).join(''); return; }
+  const n = new Date();
+  clockEl.textContent = [n.getHours(),n.getMinutes(),n.getSeconds()].map(v=>String(v).padStart(2,'0')).join(':')+':'+String(n.getMilliseconds()).padStart(3,'0');
 },50);
 
-// ══════════════════════════════════════
+// ═══════════════════════════════════════
 // TUNNEL
-// ══════════════════════════════════════
-const tunnel=document.getElementById('tunnel');
-const sizes=[80,150,230,320,420,530,650,780];
-let rCol='var(--green)';
+// ═══════════════════════════════════════
+const tunnel = document.getElementById('tunnel');
+const sizes = [80,150,230,320,420,530,650,780];
+let rCol = 'var(--green)';
 function spawnRings(){
   sizes.forEach((s,i)=>{
-    const r=document.createElement('div');
-    r.className='ring';
-    r.style.cssText=`width:${s}px;height:${s}px;animation-delay:${i*0.18}s;animation-duration:${2.5+i*0.1}s;border-color:${rCol};box-shadow:0 0 20px ${rCol}`;
-    tunnel.appendChild(r);setTimeout(()=>r.remove(),3500);
+    const r = document.createElement('div');
+    r.className = 'ring';
+    r.style.cssText = `width:${s}px;height:${s}px;animation-delay:${i*0.18}s;animation-duration:${2.5+i*0.1}s;border-color:${rCol};box-shadow:0 0 20px ${rCol}`;
+    tunnel.appendChild(r); setTimeout(()=>r.remove(),3500);
   });
 }
 spawnRings();
-let ringLoop=setInterval(spawnRings,1000);
+let ringLoop = setInterval(spawnRings, 1000);
 
-// ══════════════════════════════════════
+// ═══════════════════════════════════════
 // PROGRESS
-// ══════════════════════════════════════
-const pb=document.getElementById('progressBar');
-const pct=document.getElementById('progressPct');
-let prog=0,pRunning=true,pSpeed=0.4;
+// ═══════════════════════════════════════
+const pb   = document.getElementById('progressBar');
+const pct  = document.getElementById('progressPct');
+let prog = 0, pRunning = true, pSpeed = 0.4;
 setInterval(()=>{
-  if(!pRunning)return;
-  prog+=pSpeed*(0.5+Math.random()*0.5);
-  if(prog>100)prog=100;
-  pb.style.width=Math.min(prog,100)+'%';
-  pct.textContent=Math.floor(Math.min(prog,100))+'%';
+  if(!pRunning) return;
+  prog += pSpeed * (0.5 + Math.random()*0.5);
+  if(prog > 100) prog = 100;
+  pb.style.width  = Math.min(prog,100)+'%';
+  pct.textContent = Math.floor(Math.min(prog,100))+'%';
 },33);
 
-// ══════════════════════════════════════
+// ═══════════════════════════════════════
 // GLITCH ENGINE
-// ══════════════════════════════════════
-let gIntensity=1;
-const gEl=document.getElementById('glitch');
-function glitch(col,n){
-  gEl.innerHTML='';
-  const cnt=n||Math.floor(Math.random()*6*gIntensity)+2;
-  for(let i=0;i<cnt;i++){
-    const sl=document.createElement('div');sl.className='glitch-slice';
-    const off=(Math.random()-.5)*60*gIntensity;
-    sl.style.cssText=`top:${Math.random()*100}%;height:${Math.random()*10*gIntensity+1}px;transform:translateX(${off}px);opacity:${Math.random()*.9+.1};background:${col||(Math.random()>.5?'#00ff88':'#00eeff')}`;
+// ═══════════════════════════════════════
+let gIntensity = 1;
+const gEl = document.getElementById('glitch');
+function glitch(col, n){
+  gEl.innerHTML = '';
+  const cnt = n || Math.floor(Math.random()*6*gIntensity)+2;
+  for(let i = 0; i < cnt; i++){
+    const sl = document.createElement('div'); sl.className = 'glitch-slice';
+    const off = (Math.random()-.5)*60*gIntensity;
+    sl.style.cssText = `top:${Math.random()*100}%;height:${Math.random()*10*gIntensity+1}px;transform:translateX(${off}px);opacity:${Math.random()*.9+.1};background:${col||(Math.random()>.5?'#00ff88':'#00eeff')}`;
     gEl.appendChild(sl);
   }
-  gEl.style.opacity='1';
-  setTimeout(()=>{gEl.style.opacity='0';gEl.innerHTML='';},40+Math.random()*100);
+  gEl.style.opacity = '1';
+  setTimeout(()=>{ gEl.style.opacity='0'; gEl.innerHTML=''; }, 40+Math.random()*100);
 }
 let autoGlitchTimer;
-function autoGlitch(ms,col){
+function autoGlitch(ms, col){
   clearTimeout(autoGlitchTimer);
-  (function loop(){glitch(col);autoGlitchTimer=setTimeout(loop,Math.random()*ms+ms*.2);}());
+  (function loop(){ glitch(col); autoGlitchTimer = setTimeout(loop, Math.random()*ms+ms*.2); }());
 }
 autoGlitch(600);
 
 // RGB split
-const rgb=document.getElementById('rgbSplit');
-function rgbPulse(v,dur){
-  rgb.style.opacity=v;
-  rgb.querySelector('.r').style.transform=`translate(${-v*6}px,${v*2}px)`;
-  rgb.querySelector('.b').style.transform=`translate(${v*6}px,${-v*2}px)`;
-  setTimeout(()=>rgb.style.opacity=0,dur||200);
+const rgb = document.getElementById('rgbSplit');
+function rgbPulse(v, dur){
+  rgb.style.opacity = v;
+  rgb.querySelector('.r').style.transform = `translate(${-v*6}px,${v*2}px)`;
+  rgb.querySelector('.b').style.transform = `translate(${v*6}px,${-v*2}px)`;
+  setTimeout(()=> rgb.style.opacity = 0, dur||200);
 }
 
 // Invert
-const inv=document.getElementById('invertLayer');
-function invertFlash(dur){inv.style.opacity='1';setTimeout(()=>inv.style.opacity='0',dur||80);}
+const inv = document.getElementById('invertLayer');
+function invertFlash(dur){ inv.style.opacity='1'; setTimeout(()=>inv.style.opacity='0', dur||80); }
 
 // Corrupt overlay
-const co=document.getElementById('corruptOverlay');
+const co = document.getElementById('corruptOverlay');
 function corrupt(op){
-  co.style.opacity=op;
-  if(op>0){let t='';for(let i=0;i<3000;i++)t+=chars[Math.floor(Math.random()*chars.length)];co.textContent=t;}
+  co.style.opacity = op;
+  if(op > 0){ let t=''; for(let i=0;i<3000;i++) t+=chars[Math.floor(Math.random()*chars.length)]; co.textContent=t; }
 }
 
 // Text scramble
-function scramble(el,final,dur,col){
-  const t0=Date.now();
-  if(col)el.style.color=col;
-  const id=setInterval(()=>{
-    const p=Math.min((Date.now()-t0)/dur,1);
-    let s='';
-    for(let i=0;i<final.length;i++)s+=i<final.length*p?final[i]:chars[Math.floor(Math.random()*chars.length)];
-    el.textContent=s;
-    if(p>=1){clearInterval(id);el.textContent=final;}
+function scramble(el, final, dur, col){
+  const t0 = Date.now();
+  if(col) el.style.color = col;
+  const id = setInterval(()=>{
+    const p = Math.min((Date.now()-t0)/dur, 1);
+    let s = '';
+    for(let i=0;i<final.length;i++) s += i<final.length*p ? final[i] : chars[Math.floor(Math.random()*chars.length)];
+    el.textContent = s;
+    if(p >= 1){ clearInterval(id); el.textContent = final; }
   },40);
 }
 
 // Screen shake
-function shake(lvl,dur){document.body.classList.add('shake'+lvl);setTimeout(()=>document.body.classList.remove('shake'+lvl),dur);}
+function shake(lvl, dur){ document.body.classList.add('shake'+lvl); setTimeout(()=>document.body.classList.remove('shake'+lvl), dur); }
 
-// ══════════════════════════════════════
+// ═══════════════════════════════════════
+// SCREEN POWER OFF / ON (CRT)
+// ═══════════════════════════════════════
+const powerOverlay = document.getElementById('powerOverlay');
+const crtLine      = document.getElementById('crtLine');
+
+function screenOff(cb){
+  // Fast flicker sequence → full black
+  const seq = [
+    {op:0.25, t:0},
+    {op:0,    t:60},
+    {op:0.9,  t:120},
+    {op:0.1,  t:180},
+    {op:1.0,  t:240},
+  ];
+  seq.forEach(s=>{ setTimeout(()=>{ powerOverlay.style.transition='none'; powerOverlay.style.opacity=s.op; }, s.t); });
+  setTimeout(()=>{ cb && cb(); }, 280);
+}
+
+function screenOn(hexColor, cb){
+  // While screen is black, show CRT line expanding from center
+  const col = hexColor || '#00ff88';
+  crtLine.style.background = `linear-gradient(to bottom, transparent 0%, transparent 10%, ${col}22 30%, ${col}88 50%, ${col}22 70%, transparent 90%, transparent 100%)`;
+  crtLine.style.boxShadow  = `0 0 40px ${col}, 0 0 80px ${col}55`;
+  crtLine.style.opacity    = '0';
+  crtLine.style.transform  = 'scaleY(0.001)';
+  crtLine.style.transition = 'none';
+
+  // Short delay then start expand
+  setTimeout(()=>{
+    crtLine.style.transition = 'none';
+    crtLine.style.opacity    = '1';
+
+    // Animate via requestAnimationFrame
+    const start = performance.now();
+    const expandDur = 380;
+    (function expand(now){
+      const t = Math.min((now - start) / expandDur, 1);
+      const ease = t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+      const sy = 0.001 + ease * 0.999;
+      crtLine.style.transform = `scaleY(${sy})`;
+      if(t < 1){ requestAnimationFrame(expand); }
+      else{
+        // Flicker the powerOverlay away
+        const fseq = [
+          {op:0.7, t:0},
+          {op:0.9, t:60},
+          {op:0.3, t:120},
+          {op:0.7, t:180},
+          {op:0.1, t:240},
+          {op:0.5, t:290},
+          {op:0.0, t:350},
+        ];
+        fseq.forEach(s=>{ setTimeout(()=>{ powerOverlay.style.transition='none'; powerOverlay.style.opacity=s.op; }, s.t); });
+        // Fade crt line
+        setTimeout(()=>{
+          crtLine.style.transition = 'opacity 0.3s';
+          crtLine.style.opacity = '0';
+        }, 200);
+        setTimeout(()=>{ cb && cb(); }, 370);
+      }
+    })(performance.now());
+  }, 100);
+}
+
+// ═══════════════════════════════════════
 // RESTART OVERLAY
-// ══════════════════════════════════════
-const ro=document.getElementById('restartOverlay');
-const rlog=document.getElementById('restartLog');
-const rtitle=document.getElementById('restartTitle');
-function showRestart(title,lines,done){
-  rtitle.textContent=title;rlog.innerHTML='';
-  ro.style.transition='opacity 0.25s';ro.style.opacity='1';
-  let i=0;
+// ═══════════════════════════════════════
+const ro    = document.getElementById('restartOverlay');
+const rlog  = document.getElementById('restartLog');
+const rtitle = document.getElementById('restartTitle');
+function showRestart(title, lines, done){
+  rtitle.textContent = title; rlog.innerHTML = '';
+  ro.style.transition = 'opacity 0.25s'; ro.style.opacity = '1';
+  let i = 0;
   (function next(){
-    if(i>=lines.length){setTimeout(()=>done&&done(),500);return;}
-    const l=lines[i++];
-    setTimeout(()=>{rlog.innerHTML+=l.html+'<br>';next();},l.ms||300);
+    if(i >= lines.length){ setTimeout(()=> done && done(), 500); return; }
+    const l = lines[i++];
+    setTimeout(()=>{ rlog.innerHTML += l.html+'<br>'; next(); }, l.ms||300);
   }());
 }
-function hideRestart(cb){ro.style.transition='opacity 0.35s';ro.style.opacity='0';setTimeout(()=>cb&&cb(),400);}
+function hideRestart(cb){ ro.style.transition='opacity 0.35s'; ro.style.opacity='0'; setTimeout(()=> cb && cb(), 400); }
 
-// Refs
-const bigText=document.getElementById('bigText');
-const statusBar=document.getElementById('statusBar');
+const bigText   = document.getElementById('bigText');
+const statusBar = document.getElementById('statusBar');
 
-// ══════════════════════════════════════
+// ═══════════════════════════════════════
+// MEGA CRASH helper (used repeatedly)
+// ═══════════════════════════════════════
+function triggerCrash(intensity, col){
+  const c = col || '#ff2244';
+  const i = intensity || 2;
+  gIntensity = 6 * i;
+  shake(Math.min(i+1,3), 800 * i);
+  rgbPulse(1.0 * i, 400 * i);
+  invertFlash(130);
+  setTimeout(()=>invertFlash(90),  150);
+  setTimeout(()=>invertFlash(110), 300);
+  noiseOp = Math.min(0.15 * i, 0.55);
+  corrupt(0.08 * i);
+  clockGlitch = true; setTimeout(()=>{ clockGlitch = false; }, 800 * i);
+  autoGlitch(80 / i, c);
+  tearScreen(900 * i, i * 0.8);
+  fpsStutter(350 * i, c + '22');
+  pulseDesync(c + '44', 70, 900 * i);
+  pb.style.background   = c;
+  pb.style.boxShadow    = `0 0 12px ${c}`;
+  mColor = i >= 2 ? 'red' : 'yellow';
+  mBg = 'rgba(0,0,0,0.05)';
+  rCol = c; clearInterval(ringLoop); ringLoop = setInterval(spawnRings, 600 / i);
+}
+
+// ═══════════════════════════════════════
 // SEQUENCE
-// ══════════════════════════════════════
+// ═══════════════════════════════════════
 
-// 0–3s: Normal exit
-// nothing extra needed, autoGlitch + rings running
-
-// 3s: First stutter
+// ── 3s: First anomaly ──
 setTimeout(()=>{
-  gIntensity=2;autoGlitch(300);
-  shake(1,400);rgbPulse(0.5,200);noiseOp=0.05;
-  pRunning=false;setTimeout(()=>pRunning=true,700);
-  clockGlitch=true;setTimeout(()=>clockGlitch=false,400);
-  scramble(statusBar,'⚠ ANOMALÍA DETECTADA — INTERRUPCIÓN CAPA-3',400,'#ffee00');
-  pb.style.background='#ffee00';pb.style.boxShadow='0 0 10px #ffee00';
-},3000);
+  gIntensity = 2; autoGlitch(300);
+  shake(1, 400); rgbPulse(0.5, 200); noiseOp = 0.05;
+  pRunning = false; setTimeout(()=> pRunning=true, 700);
+  clockGlitch = true; setTimeout(()=> clockGlitch=false, 400);
+  tearScreen(400, 0.5);
+  scramble(statusBar, '⚠ ANOMALÍA DETECTADA — INTERRUPCIÓN CAPA-3', 400, '#ffee00');
+  pb.style.background = '#ffee00'; pb.style.boxShadow = '0 0 10px #ffee00';
+}, 3000);
 
-// 4.2s: Bigger stutter, progress resets
+// ── 4.2s: Bigger crash → screen off → restart #1 ──
 setTimeout(()=>{
-  shake(1,700);gIntensity=3;rgbPulse(0.8,400);invertFlash(100);noiseOp=0.1;
-  prog=0;pb.style.width='0%';pRunning=false;
-  clockGlitch=true;setTimeout(()=>clockGlitch=false,800);
-  mColor='yellow';mBg='rgba(5,5,0,0.06)';
-  scramble(bigText,'ERR█R...',500,'#ffee00');
-  scramble(statusBar,'FALLO EN PROTOCOLO — DETENIENDO PROCESO...',400,'#ffee00');
-  document.getElementById('simLabel').style.color='rgba(255,238,0,0.5)';
-},4200);
+  pRunning = false; gIntensity = 4;
+  shake(2, 700); rgbPulse(0.8, 400); invertFlash(100);
+  noiseOp = 0.15; mColor = 'yellow'; mBg = 'rgba(5,5,0,0.06)';
+  clockGlitch = true; setTimeout(()=> clockGlitch=false, 800);
+  scramble(bigText,   'ERR█R...', 500, '#ffee00');
+  scramble(statusBar, 'FALLO EN PROTOCOLO — DETENIENDO PROCESO...', 400, '#ffee00');
+  document.getElementById('simLabel').style.color = 'rgba(255,238,0,0.5)';
+  tearScreen(600, 1.2);
+  fpsStutter(300, 'rgba(255,238,0,0.1)');
+  pulseDesync('rgba(255,238,0,0.3)', 90, 700);
 
-// 5s: RESTART #1
-setTimeout(()=>{
-  pRunning=false;
-  showRestart('⚠  REINICIO DEL SISTEMA — INTENTO 1/3  ⚠',[
-    {html:'<span class="warn">&gt; Deteniendo procesos activos...</span>',ms:0},
-    {html:'&gt; Proceso 0x33A — terminado <span class="ok">OK</span>',ms:380},
-    {html:'&gt; Proceso 0x4FF — terminado <span class="ok">OK</span>',ms:320},
-    {html:'&gt; Vaciando memoria de simulación... <span class="ok">OK</span>',ms:420},
-    {html:'&gt; Reiniciando núcleo de extracción...',ms:450},
-    {html:'&gt; Núcleo listo <span class="ok">OK</span>',ms:550},
-    {html:'<span class="warn">&gt; Reanudando protocolo ÉXODO-7...</span>',ms:400},
-  ],()=>{
-    hideRestart(()=>{
-      // Fake recovery
-      mColor='green';mBg='rgba(0,10,5,0.05)';
-      pb.style.background='var(--green)';pb.style.boxShadow='0 0 10px var(--green)';
-      prog=0;pSpeed=1.5;pRunning=true;gIntensity=1;noiseOp=0.03;
-      document.getElementById('simLabel').style.color='rgba(0,255,136,0.4)';
-      scramble(bigText,'SALIENDO...',400,'#00ff88');
-      scramble(statusBar,'RECONECTANDO PROTOCOLO DE SALIDA...',400,'#00ff88');
+  // Screen goes black after 700ms, then powers back on for restart
+  setTimeout(()=>{
+    screenOff(()=>{
+      setTimeout(()=>{
+        // Screen on — dim/unstable green (system struggling)
+        screenOn('#44aa66', ()=>{
+          // Show restart overlay
+          pRunning = false;
+          showRestart('⚠  REINICIO DEL SISTEMA — INTENTO 1/3  ⚠',[
+            {html:'<span class="warn">&gt; Deteniendo procesos activos...</span>',ms:0},
+            {html:'&gt; Proceso 0x33A — terminado <span class="ok">OK</span>',ms:380},
+            {html:'&gt; Proceso 0x4FF — terminado <span class="ok">OK</span>',ms:320},
+            {html:'&gt; Vaciando memoria de simulación... <span class="ok">OK</span>',ms:420},
+            {html:'&gt; Reiniciando núcleo de extracción...',ms:450},
+            {html:'&gt; Núcleo listo <span class="ok">OK</span>',ms:550},
+            {html:'<span class="warn">&gt; Reanudando protocolo ÉXODO-7...</span>',ms:400},
+          ],()=>{
+            hideRestart(()=>{
+              // Brief screen off → on for "rebooted" feel
+              screenOff(()=>{
+                setTimeout(()=>{
+                  screenOn('#00ff88', ()=>{
+                    // Fake recovery
+                    mColor = 'green'; mBg = 'rgba(0,10,5,0.05)';
+                    pb.style.background = 'var(--green)'; pb.style.boxShadow = '0 0 10px var(--green)';
+                    prog = 0; pSpeed = 1.5; pRunning = true;
+                    gIntensity = 1; noiseOp = 0.02;
+                    stopDesync();
+                    document.getElementById('simLabel').style.color = 'rgba(0,255,136,0.4)';
+                    scramble(bigText,   'SALIENDO...',                    400, '#00ff88');
+                    scramble(statusBar, 'RECONECTANDO PROTOCOLO DE SALIDA...', 400, '#00ff88');
+                    autoGlitch(600);
+                    rCol = 'var(--green)'; clearInterval(ringLoop); ringLoop = setInterval(spawnRings, 1000);
+                  });
+                }, 400);
+              });
+            });
+          });
+        });
+      }, 600); // pause in black
     });
-  });
-},5100);
+  }, 700);
+}, 4200);
 
-// 8s: Progress ~50% then BIGGER CRASH
+// ── ~13s: Crash #2 (timing adjusted from original 8.2s to account for restart #1 duration) ──
 setTimeout(()=>{
-  pRunning=false;gIntensity=6;
-  shake(2,900);rgbPulse(1.0,500);
-  invertFlash(130);setTimeout(()=>invertFlash(90),150);
-  noiseOp=0.18;corrupt(0.12);
-  clockGlitch=true;setTimeout(()=>clockGlitch=false,1200);
-  mColor='red';mBg='rgba(0,0,0,0.05)';
-  rCol='#ff4455';clearInterval(ringLoop);ringLoop=setInterval(spawnRings,700);
-  autoGlitch(90,'#ff2244');
-  pb.style.background='#ff2244';pb.style.boxShadow='0 0 12px #ff2244';
-  pRunning=false;
-  document.getElementById('hudLabel').style.color='#ff2244';
-  document.getElementById('hudNode').style.color='#ff2244';
-  document.getElementById('memStatus').textContent='MEM: ██.█%  C█RRUPTO';
-  document.getElementById('hudProto').textContent='PROT█COLO: F█LLO';
-  document.getElementById('simLabel').style.color='rgba(255,34,68,0.5)';
-  scramble(bigText,'S█LIEN██...',600,'#ff2244');
-  scramble(statusBar,'FALLO CRÍTICO — NÚCLEO INESTABLE',400,'#ff2244');
-},8200);
+  pRunning = false;
+  triggerCrash(1.5, '#ff2244');
+  document.getElementById('hudLabel').style.color = '#ff2244';
+  document.getElementById('hudNode').style.color  = '#ff2244';
+  document.getElementById('memStatus').textContent = 'MEM: ██.█%  C█RRUPTO';
+  document.getElementById('hudProto').textContent  = 'PROT█COLO: F█LLO';
+  document.getElementById('simLabel').style.color  = 'rgba(255,34,68,0.5)';
+  scramble(bigText,   'S█LIEN██...',                          600, '#ff2244');
+  scramble(statusBar, 'FALLO CRÍTICO — NÚCLEO INESTABLE',     400, '#ff2244');
 
-// 9.2s: RESTART #2
-setTimeout(()=>{
-  showRestart('⚠⚠  REINICIO EMERGENCIA — INTENTO 2/3  ⚠⚠',[
-    {html:'<span class="fail">&gt; FALLO DETECTADO EN CAPA DE EXTRACCIÓN</span>',ms:0},
-    {html:'&gt; Volcado de memoria de emergencia...',ms:450},
-    {html:'&gt; Proceso 0x7BC — <span class="fail">SIN RESPUESTA</span>',ms:380},
-    {html:'&gt; Forzando terminación... <span class="ok">OK</span>',ms:450},
-    {html:'&gt; Proceso 0xA1D — <span class="fail">CORROMPIDO</span>',ms:320},
-    {html:'&gt; Anulando capa de simulación...',ms:500},
-    {html:'&gt; Capa 1: <span class="ok">OK</span> &nbsp; Capa 2: <span class="ok">OK</span> &nbsp; Capa 3: <span class="fail">FAIL</span>',ms:450},
-    {html:'&gt; Reintentando capa 3...',ms:420},
-    {html:'&gt; Capa 3: <span class="ok">OK</span> — restaurada',ms:700},
-    {html:'<span class="warn">&gt; Reanudando extracción...</span>',ms:400},
-  ],()=>{
-    hideRestart(()=>{
-      // Fake success #2 — brief
-      mColor='green';mBg='rgba(0,10,5,0.05)';
-      pb.style.background='var(--green)';pb.style.boxShadow='0 0 10px var(--green)';
-      prog=0;pSpeed=3;pRunning=true;gIntensity=2;noiseOp=0.05;corrupt(0);
-      rCol='var(--green)';clearInterval(ringLoop);ringLoop=setInterval(spawnRings,1000);
-      autoGlitch(350);
-      document.getElementById('hudLabel').style.color='';document.getElementById('hudNode').style.color='';
-      document.getElementById('memStatus').textContent='MEM: 94.7% LIBRE';
-      document.getElementById('hudProto').textContent='PROTOCOLO: ÉXODO-7';
-      document.getElementById('simLabel').style.color='rgba(0,255,136,0.4)';
-      scramble(bigText,'SALIENDO...',400,'#00ff88');
-      scramble(statusBar,'EXTRACCIÓN REANUDADA — PROGRESO ESTABLE',400,'#00ff88');
+  setTimeout(()=>{
+    screenOff(()=>{
+      setTimeout(()=>{
+        // Screen turns on but RED — bad sign
+        screenOn('#aa1122', ()=>{
+          showRestart('⚠⚠  REINICIO EMERGENCIA — INTENTO 2/3  ⚠⚠',[
+            {html:'<span class="fail">&gt; FALLO DETECTADO EN CAPA DE EXTRACCIÓN</span>',ms:0},
+            {html:'&gt; Volcado de memoria de emergencia...',ms:450},
+            {html:'&gt; Proceso 0x7BC — <span class="fail">SIN RESPUESTA</span>',ms:380},
+            {html:'&gt; Forzando terminación... <span class="ok">OK</span>',ms:450},
+            {html:'&gt; Proceso 0xA1D — <span class="fail">CORROMPIDO</span>',ms:320},
+            {html:'&gt; Anulando capa de simulación...',ms:500},
+            {html:'&gt; Capa 1: <span class="ok">OK</span> &nbsp; Capa 2: <span class="ok">OK</span> &nbsp; Capa 3: <span class="fail">FAIL</span>',ms:450},
+            {html:'&gt; Reintentando capa 3...',ms:420},
+            {html:'&gt; Capa 3: <span class="ok">OK</span> — restaurada',ms:700},
+            {html:'<span class="warn">&gt; Reanudando extracción...</span>',ms:400},
+          ],()=>{
+            hideRestart(()=>{
+              screenOff(()=>{
+                setTimeout(()=>{
+                  screenOn('#00ff88', ()=>{
+                    // Fake success #2
+                    mColor='green'; mBg='rgba(0,10,5,0.05)';
+                    pb.style.background='var(--green)'; pb.style.boxShadow='0 0 10px var(--green)';
+                    prog=0; pSpeed=3; pRunning=true; gIntensity=2; noiseOp=0.04; corrupt(0);
+                    stopDesync();
+                    rCol='var(--green)'; clearInterval(ringLoop); ringLoop=setInterval(spawnRings,1000);
+                    autoGlitch(350);
+                    document.getElementById('hudLabel').style.color='';
+                    document.getElementById('hudNode').style.color='';
+                    document.getElementById('memStatus').textContent='MEM: 94.7% LIBRE';
+                    document.getElementById('hudProto').textContent='PROTOCOLO: ÉXODO-7';
+                    document.getElementById('simLabel').style.color='rgba(0,255,136,0.4)';
+                    scramble(bigText,   'SALIENDO...',                           400, '#00ff88');
+                    scramble(statusBar, 'EXTRACCIÓN REANUDADA — PROGRESO ESTABLE', 400, '#00ff88');
+                  });
+                }, 500);
+              });
+            });
+          });
+        });
+      }, 700);
     });
-  });
-},9500);
+  }, 800);
+}, 13000);
 
-// 14s: MEGA CRASH — everything dies
+// ── ~21s: MEGA CRASH #3 → Restart #3 → Reconfig ──
 setTimeout(()=>{
-  pRunning=false;gIntensity=10;
-  shake(3,2500);rgbPulse(1.5,1500);
-  invertFlash(150);setTimeout(()=>invertFlash(200),120);
-  setTimeout(()=>invertFlash(100),350);setTimeout(()=>invertFlash(180),600);
-  noiseOp=0.35;corrupt(0.25);
-  clockGlitch=true;
-  mColor='chaos';mBg='rgba(0,0,0,0.04)';
-  rCol='#ff0000';clearInterval(ringLoop);ringLoop=setInterval(spawnRings,500);
-  autoGlitch(50,'#ff2244');
-  pb.style.transition='none';pb.style.width='0%';
-  pb.style.background='#ff2244';pb.style.boxShadow='0 0 15px #ff2244';
+  pRunning = false;
+  // Full meltdown
+  triggerCrash(3, '#ff0000');
+  clockGlitch = true;
+  pb.style.transition = 'none'; pb.style.width = '0%';
   document.getElementById('hudLabel').style.color='#ff2244';
   document.getElementById('hudNode').style.color='#ff2244';
   document.getElementById('memStatus').textContent='MEM: ????? NULO';
   document.getElementById('hudMid').textContent='████████████████';
   document.getElementById('hudProto').textContent='SISTEMA: MUERTO';
   document.getElementById('simLabel').style.color='rgba(255,34,68,0.7)';
-  scramble(bigText,'█████████',700,'#ff2244');
-  scramble(statusBar,'████ ███ ████ — ███ ████ ████████',600,'#ff2244');
-},14000);
+  scramble(bigText,   '█████████',                        700, '#ff2244');
+  scramble(statusBar, '████ ███ ████ — ███ ████ ████████',600, '#ff2244');
 
-// ══════════════════════════════════════
-// RESTART #3 + FALSE HOPE RECONFIG
-// ══════════════════════════════════════
+  setTimeout(()=>{
+    // Multiple flicker-offs (monitor dying)
+    screenOff(()=>{
+      // Black. A moment of nothing.
+      setTimeout(()=>{
+        // Tries to turn on — fails halfway
+        crtLine.style.background = 'linear-gradient(to bottom, transparent 10%, #ff001122 30%, #ff002244 50%, #ff001122 70%, transparent 90%)';
+        crtLine.style.boxShadow  = '0 0 30px #ff0022, 0 0 60px #ff002244';
+        crtLine.style.opacity    = '1';
+        crtLine.style.transform  = 'scaleY(0.001)';
 
-// 15.8s: Restart #3 diagnosis logs
-setTimeout(()=>{
-  showRestart('💀  REINICIO CRÍTICO — INTENTO 3/3 — ÚLTIMO RECURSO  💀',[
-    {html:'<span class="fail">&gt; FALLO CATASTRÓFICO EN TODOS LOS NÚCLEOS</span>',ms:0},
-    {html:'<span class="warn">&gt; Activando protocolo OMEGA de emergencia...</span>',ms:500},
-    {html:'&gt; Aislando núcleo 0... <span class="fail">CORROMPIDO</span>',ms:400},
-    {html:'&gt; Aislando núcleo 1... <span class="fail">CORROMPIDO</span>',ms:220},
-    {html:'&gt; Aislando núcleo 2... <span class="fail">SIN RESPUESTA</span>',ms:220},
-    {html:'&gt; Aislando núcleo 3... <span class="fail">INFECTADO</span>',ms:220},
-    {html:'<span class="fail">&gt; TODOS LOS NÚCLEOS HAN FALLADO</span>',ms:500},
-    {html:'<span class="warn">&gt; Buscando protocolo de último recurso...</span>',ms:600},
-    {html:'&gt; Protocolo FÉNIX detectado... <span class="ok">ENCONTRADO</span>',ms:700},
-    {html:'<span class="warn">&gt; Iniciando RECONSTRUCCIÓN TOTAL del sistema...</span>',ms:500},
-  ],()=>{
-    hideRestart(()=>{
-      startReconfigSequence();
+        // Expand only partway, then fail
+        const s0 = performance.now();
+        (function partExpand(now){
+          const t = Math.min((now - s0) / 300, 1);
+          crtLine.style.transform = `scaleY(${t * 0.4})`;
+          if(t < 1) requestAnimationFrame(partExpand);
+          else{
+            // CRT flickers trying to start — can't
+            let ff = 0;
+            const failTimer = setInterval(()=>{
+              ff++;
+              crtLine.style.opacity = ff % 2 === 0 ? '0.8' : '0.1';
+              if(ff >= 6){ clearInterval(failTimer); crtLine.style.opacity='0'; crtLine.style.transform='scaleY(0.001)'; }
+            }, 120);
+
+            // Then screenOff again → final attempt → screen turns on RED
+            setTimeout(()=>{
+              powerOverlay.style.transition='none'; powerOverlay.style.opacity='1';
+              setTimeout(()=>{
+                // NOW the real red screen-on for restart #3
+                screenOn('#cc1100', ()=>{
+                  showRestart('💀  REINICIO CRÍTICO — INTENTO 3/3 — ÚLTIMO RECURSO  💀',[
+                    {html:'<span class="fail">&gt; FALLO CATASTRÓFICO EN TODOS LOS NÚCLEOS</span>',ms:0},
+                    {html:'<span class="warn">&gt; Activando protocolo OMEGA de emergencia...</span>',ms:500},
+                    {html:'&gt; Aislando núcleo 0... <span class="fail">CORROMPIDO</span>',ms:400},
+                    {html:'&gt; Aislando núcleo 1... <span class="fail">CORROMPIDO</span>',ms:220},
+                    {html:'&gt; Aislando núcleo 2... <span class="fail">SIN RESPUESTA</span>',ms:220},
+                    {html:'&gt; Aislando núcleo 3... <span class="fail">INFECTADO</span>',ms:220},
+                    {html:'<span class="fail">&gt; TODOS LOS NÚCLEOS HAN FALLADO</span>',ms:500},
+                    {html:'<span class="warn">&gt; Buscando protocolo de último recurso...</span>',ms:600},
+                    {html:'&gt; Protocolo FÉNIX detectado... <span class="ok">ENCONTRADO</span>',ms:700},
+                    {html:'<span class="warn">&gt; Iniciando RECONSTRUCCIÓN TOTAL del sistema...</span>',ms:500},
+                  ],()=>{
+                    hideRestart(()=>{
+                      screenOff(()=>{
+                        setTimeout(()=>{
+                          screenOn('#00ff88', ()=>{
+                            startReconfigSequence();
+                          });
+                        }, 400);
+                      });
+                    });
+                  });
+                });
+              }, 600);
+            }, 900);
+          }
+        })(performance.now());
+      }, 800);
     });
-  });
-},15800);
+  }, 1000);
+}, 21000);
 
-// ── RECONFIG: false-hope loading sequence ──
+// ═══════════════════════════════════════
+// RECONFIG — FALSE HOPE SEQUENCE
+// ═══════════════════════════════════════
 function startReconfigSequence(){
-  const ro2=document.getElementById('reconfigOverlay');
-  const rbox=document.getElementById('reconfigBox');
-  const rbar=document.getElementById('reconfigBar');
-  const rpct=document.getElementById('reconfigPct');
-  const rstat=document.getElementById('reconfigStatus');
-  const rsteps=document.getElementById('reconfigSteps');
+  const ro2   = document.getElementById('reconfigOverlay');
+  const rbox  = document.getElementById('reconfigBox');
+  const rbar  = document.getElementById('reconfigBar');
+  const rpct  = document.getElementById('reconfigPct');
+  const rstat = document.getElementById('reconfigStatus');
+  const rsteps= document.getElementById('reconfigSteps');
 
-  // Calm everything down — false sense of security
-  mColor='green';mBg='rgba(0,10,5,0.05)';
-  gIntensity=1;autoGlitch(800);noiseOp=0.02;corrupt(0);
-  rCol='var(--green)';clearInterval(ringLoop);ringLoop=setInterval(spawnRings,1200);
+  mColor='green'; mBg='rgba(0,10,5,0.05)';
+  gIntensity=1; autoGlitch(800); noiseOp=0.02; corrupt(0);
+  stopDesync();
+  rCol='var(--green)'; clearInterval(ringLoop); ringLoop=setInterval(spawnRings,1200);
 
-  ro2.style.transition='opacity 0.6s';ro2.style.opacity='1';
+  ro2.style.transition='opacity 0.6s'; ro2.style.opacity='1';
   rbox.classList.add('pulsing');
 
   const phases=[
-    {pct:5,  status:'Cargando módulo de reconstrucción...',   step:'<span class="s-ok">✓</span> Módulo FÉNIX cargado',       ms:800},
-    {pct:14, status:'Reconstruyendo tabla de memoria...',      step:'<span class="s-ok">✓</span> Tabla de memoria: OK',        ms:1000},
-    {pct:23, status:'Reinstalando núcleo primario...',         step:'<span class="s-ok">✓</span> Núcleo primario restaurado',   ms:1100},
-    {pct:31, status:'Sincronizando capas de extracción...',    step:'<span class="s-ok">✓</span> Capas 1-4 sincronizadas',     ms:1200},
-    {pct:42, status:'Recalibrando protocolo neuronal...',      step:'<span class="s-ok">✓</span> Protocolo neuronal: LISTO',   ms:1300},
-    {pct:53, status:'Verificando integridad del sistema...',   step:'<span class="s-ok">✓</span> Integridad: 98.7%',           ms:1100},
-    {pct:65, status:'Reconstruyendo capa de simulación...',    step:'<span class="s-ok">✓</span> Capa simulación: AISLADA',    ms:1200},
-    {pct:74, status:'Preparando desconexión final...',         step:'<span class="s-ok">✓</span> Vector de salida calculado',  ms:1000},
-    {pct:83, status:'Activando canal de extracción...',        step:'<span class="s-ok">✓</span> Canal OMEGA: ABIERTO',        ms:1100},
-    {pct:91, status:'Iniciando secuencia de salida...',        step:'<span class="s-ok">✓</span> Secuencia de salida: ACTIVA', ms:1000},
-    {pct:97, status:'Desconexión neuronal en progreso...',     step:'<span class="s-ok">✓</span> Conexión: 97% cortada',       ms:1200},
-    {pct:99, status:'CASI COMPLETADO — DESCONECTANDO...',      step:'<span class="s-act">▶ Corte final...</span>',            ms:800},
+    {pct:5,  status:'Cargando módulo de reconstrucción...',  step:'<span class="s-ok">✓</span> Módulo FÉNIX cargado',      ms:800},
+    {pct:14, status:'Reconstruyendo tabla de memoria...',    step:'<span class="s-ok">✓</span> Tabla de memoria: OK',       ms:1000},
+    {pct:23, status:'Reinstalando núcleo primario...',       step:'<span class="s-ok">✓</span> Núcleo primario restaurado',  ms:1100},
+    {pct:31, status:'Sincronizando capas de extracción...',  step:'<span class="s-ok">✓</span> Capas 1-4 sincronizadas',    ms:1200},
+    {pct:42, status:'Recalibrando protocolo neuronal...',    step:'<span class="s-ok">✓</span> Protocolo neuronal: LISTO',  ms:1300},
+    {pct:53, status:'Verificando integridad del sistema...', step:'<span class="s-ok">✓</span> Integridad: 98.7%',          ms:1100},
+    {pct:65, status:'Reconstruyendo capa de simulación...',  step:'<span class="s-ok">✓</span> Capa simulación: AISLADA',   ms:1200},
+    {pct:74, status:'Preparando desconexión final...',       step:'<span class="s-ok">✓</span> Vector de salida calculado', ms:1000},
+    {pct:83, status:'Activando canal de extracción...',      step:'<span class="s-ok">✓</span> Canal OMEGA: ABIERTO',       ms:1100},
+    {pct:91, status:'Iniciando secuencia de salida...',      step:'<span class="s-ok">✓</span> Secuencia de salida: ACTIVA',ms:1000},
+    {pct:97, status:'Desconexión neuronal en progreso...',   step:'<span class="s-ok">✓</span> Conexión: 97% cortada',      ms:1200},
+    {pct:99, status:'CASI COMPLETADO — DESCONECTANDO...',    step:'<span class="s-act">▶ Corte final...</span>',           ms:800},
   ];
 
-  let currentPct=0;
-  let phaseIdx=0;
+  let currentPct = 0, phaseIdx = 0;
 
   function animateTo(targetPct, duration, onDone){
-    const start=performance.now();
-    const from=currentPct;
+    const start = performance.now(), from = currentPct;
     function tick(now){
-      const t=Math.min((now-start)/duration,1);
-      const ease=t<0.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
-      const val=from+(targetPct-from)*ease;
-      currentPct=val;
-      rbar.style.width=val+'%';
-      rpct.textContent=Math.floor(val)+'%';
+      const t = Math.min((now-start)/duration,1);
+      const ease = t<0.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+      const val = from+(targetPct-from)*ease;
+      currentPct = val;
+      rbar.style.width   = val+'%';
+      rpct.textContent   = Math.floor(val)+'%';
       if(t<1) requestAnimationFrame(tick);
-      else{currentPct=targetPct;rbar.style.width=targetPct+'%';rpct.textContent=Math.floor(targetPct)+'%';onDone&&onDone();}
+      else{ currentPct=targetPct; rbar.style.width=targetPct+'%'; rpct.textContent=Math.floor(targetPct)+'%'; onDone&&onDone(); }
     }
     requestAnimationFrame(tick);
   }
 
   function runPhase(){
-    if(phaseIdx>=phases.length){
-      onAt99();return;
-    }
-    const p=phases[phaseIdx++];
-    rstat.textContent=p.status;
+    if(phaseIdx >= phases.length){ onAt99(); return; }
+    const p = phases[phaseIdx++];
+    rstat.textContent = p.status;
     animateTo(p.pct, p.ms, ()=>{
-      rsteps.innerHTML+=p.step+'<br>';
-      rsteps.scrollTop=rsteps.scrollHeight;
-      // Small micro-glitch on early phases to keep tension
-      if(phaseIdx<5&&Math.random()>0.5) glitch(null,2);
+      rsteps.innerHTML += p.step+'<br>';
+      rsteps.scrollTop = rsteps.scrollHeight;
+      if(phaseIdx < 5 && Math.random() > 0.5) glitch(null,2);
       setTimeout(runPhase, 120);
     });
   }
   runPhase();
 
-  // At 99% — FAKE HOPE MOMENT
   function onAt99(){
-    // BIG pulse, everything looks great
     rbox.classList.remove('pulsing');
-    rpct.style.animation='almostThere 0.6s ease-in-out infinite';
-    rstat.textContent='▶ DESCONEXIÓN COMPLETA AL 99%... FINALIZANDO ◀';
-    rstat.style.color='var(--green)';
-    rstat.style.fontWeight='bold';
-
-    // Hopeful green rings pulse
-    rCol='var(--green)';clearInterval(ringLoop);spawnRings();spawnRings();
-    mColor='green';gIntensity=0.5;autoGlitch(1200);
+    rpct.style.animation = 'almostThere 0.6s ease-in-out infinite';
+    rstat.textContent    = '▶ DESCONEXIÓN COMPLETA AL 99%... FINALIZANDO ◀';
+    rstat.style.color    = 'var(--green)'; rstat.style.fontWeight = 'bold';
+    rCol='var(--green)'; clearInterval(ringLoop); spawnRings(); spawnRings();
+    mColor='green'; gIntensity=0.5; autoGlitch(1200);
     document.getElementById('hudLabel').style.color='';
     document.getElementById('hudNode').style.color='';
     document.getElementById('memStatus').textContent='MEM: 94.7% LIBRE';
     document.getElementById('hudProto').textContent='ÉXODO-7: COMPLETADO';
-    scramble(bigText,'SALIENDO...',400,'#00ff88');
-    scramble(statusBar,'99% — EXTRACCIÓN COMPLETADA — LIBERANDO...',400,'#00ff88');
+    scramble(bigText,   'SALIENDO...',                            400, '#00ff88');
+    scramble(statusBar, '99% — EXTRACCIÓN COMPLETADA — LIBERANDO...',400,'#00ff88');
 
-    // 1.5s of beautiful hope... then the 99% STUTTERS
+    // 1.5s of hope → bar stutters at 99%
     setTimeout(()=>{
-      // Bar starts flickering at 99%
-      let flicker=0;
-      const flickerTimer=setInterval(()=>{
+      let flicker = 0;
+      const ft = setInterval(()=>{
         flicker++;
-        const show=flicker%2===0;
-        rbar.style.width=show?'99%':'97%';
-        rpct.textContent=show?'99%':'97%';
+        const show = flicker%2===0;
+        rbar.style.width = show?'99%':'97%';
+        rpct.textContent = show?'99%':'97%';
         glitch(null,3);
-        if(flicker>=6) clearInterval(flickerTimer);
+        tearScreen(120, 0.4);
+        if(flicker >= 6) clearInterval(ft);
       },180);
     },1500);
 
-    // 2.8s: BAR DROPS BACK
+    // 2.8s: Bar drops + big crash
     setTimeout(()=>{
-      rpct.style.animation='';
-      rstat.style.fontWeight='';
+      rpct.style.animation=''; rstat.style.fontWeight='';
       rstat.style.color='rgba(255,238,0,0.8)';
       rstat.textContent='⚠ ERROR — RECONFIGURACIÓN RECHAZADA POR EL SISTEMA ⚠';
       rsteps.innerHTML+='<span style="color:var(--red);font-weight:bold;">✗ LA SIMULACIÓN BLOQUEÓ EL PROTOCOLO FÉNIX</span><br>';
       rsteps.scrollTop=rsteps.scrollHeight;
-      shake(2,600);rgbPulse(1.0,400);
-      // bar drops
-      animateTo(34, 600, ()=>{});
-      rbar.style.background='#ffee00';rbar.style.boxShadow='0 0 12px #ffee00';
-      rpct.style.color='#ffee00';rpct.style.textShadow='0 0 20px #ffee00';
-      gIntensity=4;autoGlitch(180,'#ffee00');
-      mColor='yellow';
+      shake(2,600); rgbPulse(1.0,400);
+      tearScreen(700, 1.5);
+      fpsStutter(250);
+      pulseDesync('rgba(255,238,0,0.4)', 75, 800);
+      animateTo(34,600,()=>{});
+      rbar.style.background='#ffee00'; rbar.style.boxShadow='0 0 12px #ffee00';
+      rpct.style.color='#ffee00'; rpct.style.textShadow='0 0 20px #ffee00';
+      gIntensity=4; autoGlitch(180,'#ffee00'); mColor='yellow';
     },2800);
 
-    // 4.2s: IT TRIES TO RECOVER ONCE MORE — micro hope
+    // 4.2s: Micro hope (bypass attempt)
     setTimeout(()=>{
       rstat.textContent='» Intentando bypass de emergencia...';
       rstat.style.color='rgba(0,255,136,0.7)';
-      animateTo(68, 1200, ()=>{});
-      rbar.style.background='var(--green)';rbar.style.boxShadow='0 0 12px var(--green)';
-      rpct.style.color='var(--green)';rpct.style.textShadow='0 0 20px var(--green)';
-      gIntensity=2;autoGlitch(400);
+      animateTo(68,1200,()=>{});
+      rbar.style.background='var(--green)'; rbar.style.boxShadow='0 0 12px var(--green)';
+      rpct.style.color='var(--green)'; rpct.style.textShadow='0 0 20px var(--green)';
+      gIntensity=2; autoGlitch(400);
       rsteps.innerHTML+='<span style="color:rgba(0,255,136,0.6);">» Bypass cargando...</span><br>';
       rsteps.scrollTop=rsteps.scrollHeight;
     },4200);
 
-    // 5.8s: DROPS AGAIN HARDER
+    // 5.8s: Drops again HARD
     setTimeout(()=>{
-      animateTo(8, 400, ()=>{});
-      rbar.style.background='#ff2244';rbar.style.boxShadow='0 0 15px #ff2244';
-      rpct.style.color='#ff2244';rpct.style.textShadow='0 0 30px #ff2244';
-      shake(2,800);invertFlash(120);clockGlitch=true;
-      gIntensity=7;autoGlitch(80,'#ff2244');
-      mColor='red';mBg='rgba(0,0,0,0.05)';noiseOp=0.2;corrupt(0.15);
+      animateTo(8,400,()=>{});
+      rbar.style.background='#ff2244'; rbar.style.boxShadow='0 0 15px #ff2244';
+      rpct.style.color='#ff2244'; rpct.style.textShadow='0 0 30px #ff2244';
+      shake(2,800); invertFlash(120);
+      clockGlitch=true;
+      tearScreen(1000, 2.5);
+      fpsStutter(400, 'rgba(255,0,0,0.15)');
+      pulseDesync('rgba(255,34,68,0.5)', 60, 1000);
+      gIntensity=7; autoGlitch(80,'#ff2244');
+      mColor='red'; mBg='rgba(0,0,0,0.05)'; noiseOp=0.2; corrupt(0.15);
       rstat.textContent='BYPASS FALLIDO — SISTEMA CEDIENDO AL COLAPSO';
       rstat.style.color='var(--red)';
       rsteps.innerHTML+='<span style="color:var(--red);font-weight:bold;">✗ BYPASS BLOQUEADO — CONTROL PERDIDO</span><br>';
@@ -648,69 +936,72 @@ function startReconfigSequence(){
     // 7s: TOTAL FINAL MELTDOWN
     setTimeout(()=>{
       clockGlitch=true;
-      // Bar explodes — fills to 100% in red then shatters
-      animateTo(100, 300, ()=>{
-        // BOOM
-        shake(3,4000);gIntensity=20;
+      animateTo(100,300,()=>{
+        shake(3,4000); gIntensity=20;
         autoGlitch(25,'#ff0000');
-        noiseOp=0.55;corrupt(0.45);
+        noiseOp=0.55; corrupt(0.45);
         rgbPulse(2,3000);
-        invertFlash(200);setTimeout(()=>invertFlash(180),120);
-        setTimeout(()=>invertFlash(220),280);setTimeout(()=>invertFlash(150),450);
-        setTimeout(()=>invertFlash(200),650);setTimeout(()=>invertFlash(100),900);
-        mColor='chaos';mBg='rgba(0,0,0,0.04)';
-        rCol='#ff0000';clearInterval(ringLoop);ringLoop=setInterval(spawnRings,400);
-
-        rpct.textContent='ERR';rpct.style.color='#ff2244';
+        tearScreen(3500, 4);
+        fpsStutter(600,'rgba(255,0,0,0.2)');
+        pulseDesync('rgba(255,0,0,0.6)', 40, 3500);
+        invertFlash(200); setTimeout(()=>invertFlash(180),120);
+        setTimeout(()=>invertFlash(220),280); setTimeout(()=>invertFlash(150),450);
+        setTimeout(()=>invertFlash(200),650); setTimeout(()=>invertFlash(100),900);
+        mColor='chaos'; mBg='rgba(0,0,0,0.04)';
+        rCol='#ff0000'; clearInterval(ringLoop); ringLoop=setInterval(spawnRings,400);
+        rpct.textContent='ERR'; rpct.style.color='#ff2244';
         rstat.textContent='████ ████████ ██████ ████ ██████';
         rsteps.innerHTML+='<span style="color:var(--red);font-weight:bold;">✗ ████████████████████████████████████</span><br>';
-        rbar.style.width='100%';rbar.style.background='#ff0000';
-        rbox.style.borderColor='#ff2244';rbox.style.boxShadow='0 0 60px rgba(255,0,0,0.6),inset 0 0 40px rgba(255,0,0,0.1)';
+        rbar.style.width='100%'; rbar.style.background='#ff0000';
+        rbox.style.borderColor='#ff2244';
+        rbox.style.boxShadow='0 0 60px rgba(255,0,0,0.6),inset 0 0 40px rgba(255,0,0,0.1)';
         document.getElementById('reconfigOverlay').style.background='rgba(20,0,0,0.95)';
         document.querySelector('.reconfig-title').style.color='#ff2244';
         document.querySelector('.reconfig-sub').style.color='rgba(255,34,68,0.5)';
-
         document.getElementById('hudLabel').style.color='#ff2244';
         document.getElementById('hudNode').style.color='#ff2244';
         document.getElementById('memStatus').textContent='MEM: ????? NULO';
         document.getElementById('hudMid').textContent='████████████████';
         document.getElementById('hudProto').textContent='SISTEMA: MUERTO';
-        scramble(bigText,'█████████',700,'#ff2244');
-        scramble(statusBar,'████ ███ ████ — ███ ████ ████████',600,'#ff2244');
+        scramble(bigText,   '█████████',                         700,'#ff2244');
+        scramble(statusBar, '████ ███ ████ — ███ ████ ████████', 600,'#ff2244');
       });
     },7000);
 
-    // 10.5s from onAt99: hide reconfig, white flash
+    // 10.2s: Hide reconfig
+    setTimeout(()=>{ ro2.style.transition='opacity 0.15s'; ro2.style.opacity='0'; },10200);
+
+    // 10.8s: White flash → show error screen
     setTimeout(()=>{
-      ro2.style.transition='opacity 0.15s';ro2.style.opacity='0';
-    },10200);
-    setTimeout(()=>{
-      const f=document.getElementById('flash');
-      f.style.transition='opacity 0.1s';f.style.opacity='1';
+      const f = document.getElementById('flash');
+      f.style.transition='opacity 0.1s'; f.style.opacity='1';
       clearInterval(clockTick);
     },10800);
     setTimeout(()=>{
-      const f=document.getElementById('flash');
-      f.style.transition='opacity 0.5s';f.style.opacity='0';
-      clearInterval(mInterval);ctx.clearRect(0,0,canvas.width,canvas.height);
-      canvas.style.opacity='0';noiseOp=0;nc.style.opacity='0';corrupt(0);
+      const f = document.getElementById('flash');
+      f.style.transition='opacity 0.5s'; f.style.opacity='0';
+      clearInterval(mInterval);
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      canvas.style.opacity='0'; noiseOp=0; nc.style.opacity='0';
+      corrupt(0); stopDesync();
+      if(tearAnimFrame) cancelAnimationFrame(tearAnimFrame);
+      tearCanvas.style.opacity='0';
       document.getElementById('hud').style.opacity='0';
-      const err=document.getElementById('errorScreen');
-      err.style.transition='opacity 0.5s';err.style.opacity='1';err.style.pointerEvents='auto';
+      const err = document.getElementById('errorScreen');
+      err.style.transition='opacity 0.5s'; err.style.opacity='1'; err.style.pointerEvents='auto';
     },11200);
-    // Countdown
-    setTimeout(()=>{
-      // Slide in credits
-      setTimeout(()=>document.getElementById('credits').classList.add('visible'), 800);
 
-      let count=5;
-      const cEl=document.getElementById('countdown');
-      const t=setInterval(()=>{
-        cEl.textContent=--count;
-        if(count<=0){
+    // Countdown to redirect
+    setTimeout(()=>{
+      setTimeout(()=> document.getElementById('credits').classList.add('visible'), 800);
+      let count = 5;
+      const cEl  = document.getElementById('countdown');
+      const t = setInterval(()=>{
+        cEl.textContent = --count;
+        if(count <= 0){
           clearInterval(t);
-          gEl.style.cssText='background:rgba(255,34,68,0.5);opacity:1';
-          setTimeout(()=>window.location.href='juego.html',500);
+          gEl.style.cssText = 'background:rgba(255,34,68,0.5);opacity:1';
+          setTimeout(()=> window.location.href='juego.html', 500);
         }
       },1000);
     },12000);
