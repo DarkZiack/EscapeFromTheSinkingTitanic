@@ -127,6 +127,75 @@
     .corner{position:absolute;width:16px;height:16px;border-color:var(--red);border-style:solid;opacity:.6;}
     .corner.tl{top:-1px;left:-1px;border-width:2px 0 0 2px}.corner.tr{top:-1px;right:-1px;border-width:2px 2px 0 0}
     .corner.bl{bottom:-1px;left:-1px;border-width:0 0 2px 2px}.corner.br{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+
+    /* ── TITLE CARD SCREEN ── */
+    #titleScreen{
+      position:fixed;inset:0;z-index:40;background:#000;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      opacity:0;pointer-events:none;
+    }
+    #titleScreen.visible{ opacity:1; }
+    .title-ambient{
+      position:absolute;inset:0;
+      background:radial-gradient(ellipse at 50% 55%, rgba(0,140,180,0.08) 0%, transparent 70%);
+      pointer-events:none;
+    }
+    .title-tag{
+      font-family:'Share Tech Mono',monospace;font-size:10px;
+      letter-spacing:8px;color:rgba(0,210,255,0.35);
+      text-transform:uppercase;margin-bottom:28px;
+      animation:titleTagPulse 3s ease-in-out infinite;
+    }
+    @keyframes titleTagPulse{0%,100%{opacity:0.35}50%{opacity:0.7}}
+    .title-divider-top{
+      width:320px;height:1px;
+      background:linear-gradient(to right,transparent,rgba(0,210,255,0.4),transparent);
+      margin-bottom:32px;
+    }
+    .title-main{
+      font-family:'Orbitron',monospace;font-weight:900;
+      font-size:clamp(22px,4.5vw,58px);
+      color:#fff;letter-spacing:5px;text-align:center;
+      text-shadow:0 0 40px rgba(0,210,255,0.5), 0 0 80px rgba(0,140,180,0.2);
+      line-height:1.25;min-height:2.5em;
+      animation:titleGlow 4s ease-in-out infinite;
+    }
+    @keyframes titleGlow{
+      0%,100%{text-shadow:0 0 40px rgba(0,210,255,0.5),0 0 80px rgba(0,140,180,0.2)}
+      50%{text-shadow:0 0 60px rgba(0,210,255,0.8),0 0 120px rgba(0,140,180,0.4),0 0 200px rgba(0,100,160,0.15)}
+    }
+    .title-divider-bot{
+      width:320px;height:1px;
+      background:linear-gradient(to right,transparent,rgba(0,210,255,0.4),transparent);
+      margin-top:32px;margin-bottom:44px;
+      opacity:0;transition:opacity 1.2s;
+    }
+    .title-divider-bot.show{opacity:1;}
+    .title-credits-wrap{opacity:0;transition:opacity 1.5s;text-align:center;}
+    .title-credits-wrap.show{opacity:1;}
+    .title-credits-by{
+      font-family:'Share Tech Mono',monospace;font-size:11px;
+      color:rgba(0,210,255,0.4);letter-spacing:5px;
+      text-transform:uppercase;margin-bottom:10px;
+    }
+    .title-credits-names{
+      font-family:'Orbitron',monospace;font-weight:700;
+      font-size:clamp(18px,3vw,34px);
+      color:rgba(0,210,255,0.9);letter-spacing:7px;
+      text-shadow:0 0 20px rgba(0,210,255,0.5);
+      animation:nameGlow 2.5s ease-in-out infinite;
+    }
+    @keyframes nameGlow{
+      0%,100%{color:rgba(0,210,255,0.9);text-shadow:0 0 20px rgba(0,210,255,0.5)}
+      50%{color:#fff;text-shadow:0 0 35px rgba(0,210,255,0.9),0 0 70px rgba(0,140,180,0.4)}
+    }
+    /* White bloom for final transition */
+    #whiteBloom{
+      position:fixed;inset:0;z-index:50;pointer-events:none;
+      background:radial-gradient(ellipse at center, #fff 0%, rgba(255,255,255,0) 60%);
+      opacity:0;transform:scale(0.01);
+      transform-origin:center center;
+    }
   </style>
 </head>
 <body>
@@ -213,6 +282,22 @@
     <div class="credits-divider"></div>
     <div class="credits-names">Cristian &amp; Ares</div>
   </div>
+
+  <!-- TITLE CARD -->
+  <div id="titleScreen">
+    <div class="title-ambient"></div>
+    <div class="title-tag">// SIM_CORE — PROTOCOLO OMEGA — COMPLETADO //</div>
+    <div class="title-divider-top"></div>
+    <div class="title-main" id="titleText">&nbsp;</div>
+    <div class="title-divider-bot" id="titleDivBot"></div>
+    <div class="title-credits-wrap" id="titleCredits">
+      <div class="title-credits-by">— Juego creado por —</div>
+      <div class="title-credits-names">Cristian &amp; Ares</div>
+    </div>
+  </div>
+
+  <!-- WHITE BLOOM -->
+  <div id="whiteBloom"></div>
 
 <script>
 // ═══════════════════════════════════════
@@ -614,10 +699,15 @@ setTimeout(()=>{
 
   // Screen goes black after 700ms, then powers back on for restart
   setTimeout(()=>{
+    // Quick flicker-off the HUD before going dark
+    const hud = document.getElementById('hud');
+    [0.4,0.8,0.2,0.9,0].forEach((op,i)=> setTimeout(()=>{ hud.style.opacity=op; }, i*70));
+
     screenOff(()=>{
       setTimeout(()=>{
-        // Screen on — dim/unstable green (system struggling)
-        screenOn('#44aa66', ()=>{
+        // Amber/warning CRT power-on — system struggling but recovering
+        screenOn('#cc8800', ()=>{
+          hud.style.opacity = '1';
           // Show restart overlay
           pRunning = false;
           showRestart('⚠  REINICIO DEL SISTEMA — INTENTO 1/3  ⚠',[
@@ -633,6 +723,7 @@ setTimeout(()=>{
               // Brief screen off → on for "rebooted" feel
               screenOff(()=>{
                 setTimeout(()=>{
+                  // Full bright green — successfully rebooted!
                   screenOn('#00ff88', ()=>{
                     // Fake recovery
                     mColor = 'green'; mBg = 'rgba(0,10,5,0.05)';
@@ -735,7 +826,7 @@ setTimeout(()=>{
     screenOff(()=>{
       // Black. A moment of nothing.
       setTimeout(()=>{
-        // Tries to turn on — fails halfway
+        // Tries to turn on — fails halfway with purple/corrupt color
         crtLine.style.background = 'linear-gradient(to bottom, transparent 10%, #ff001122 30%, #ff002244 50%, #ff001122 70%, transparent 90%)';
         crtLine.style.boxShadow  = '0 0 30px #ff0022, 0 0 60px #ff002244';
         crtLine.style.opacity    = '1';
@@ -756,41 +847,54 @@ setTimeout(()=>{
               if(ff >= 6){ clearInterval(failTimer); crtLine.style.opacity='0'; crtLine.style.transform='scaleY(0.001)'; }
             }, 120);
 
-            // Then screenOff again → final attempt → screen turns on RED
+            // Then screenOff again → second failed attempt in purple → final red
             setTimeout(()=>{
               powerOverlay.style.transition='none'; powerOverlay.style.opacity='1';
+              // Second attempt: purple/corrupt — looks totally wrong
               setTimeout(()=>{
-                // NOW the real red screen-on for restart #3
-                screenOn('#cc1100', ()=>{
-                  showRestart('💀  REINICIO CRÍTICO — INTENTO 3/3 — ÚLTIMO RECURSO  💀',[
-                    {html:'<span class="fail">&gt; FALLO CATASTRÓFICO EN TODOS LOS NÚCLEOS</span>',ms:0},
-                    {html:'<span class="warn">&gt; Activando protocolo OMEGA de emergencia...</span>',ms:500},
-                    {html:'&gt; Aislando núcleo 0... <span class="fail">CORROMPIDO</span>',ms:400},
-                    {html:'&gt; Aislando núcleo 1... <span class="fail">CORROMPIDO</span>',ms:220},
-                    {html:'&gt; Aislando núcleo 2... <span class="fail">SIN RESPUESTA</span>',ms:220},
-                    {html:'&gt; Aislando núcleo 3... <span class="fail">INFECTADO</span>',ms:220},
-                    {html:'<span class="fail">&gt; TODOS LOS NÚCLEOS HAN FALLADO</span>',ms:500},
-                    {html:'<span class="warn">&gt; Buscando protocolo de último recurso...</span>',ms:600},
-                    {html:'&gt; Protocolo FÉNIX detectado... <span class="ok">ENCONTRADO</span>',ms:700},
-                    {html:'<span class="warn">&gt; Iniciando RECONSTRUCCIÓN TOTAL del sistema...</span>',ms:500},
-                  ],()=>{
-                    hideRestart(()=>{
-                      screenOff(()=>{
-                        setTimeout(()=>{
-                          screenOn('#00ff88', ()=>{
-                            startReconfigSequence();
+                screenOn('#7700cc', ()=>{
+                  shake(2, 500); gIntensity=8; autoGlitch(60,'#aa00ff');
+                  tearScreen(500, 2);
+                  pulseDesync('rgba(180,0,255,0.5)', 55, 500);
+                  // Dies after 500ms
+                  setTimeout(()=>{
+                    screenOff(()=>{
+                      // Final attempt — RED screen
+                      setTimeout(()=>{
+                        screenOn('#cc1100', ()=>{
+                          showRestart('💀  REINICIO CRÍTICO — INTENTO 3/3 — ÚLTIMO RECURSO  💀',[
+                            {html:'<span class="fail">&gt; FALLO CATASTRÓFICO EN TODOS LOS NÚCLEOS</span>',ms:0},
+                            {html:'<span class="warn">&gt; Activando protocolo OMEGA de emergencia...</span>',ms:500},
+                            {html:'&gt; Aislando núcleo 0... <span class="fail">CORROMPIDO</span>',ms:400},
+                            {html:'&gt; Aislando núcleo 1... <span class="fail">CORROMPIDO</span>',ms:220},
+                            {html:'&gt; Aislando núcleo 2... <span class="fail">SIN RESPUESTA</span>',ms:220},
+                            {html:'&gt; Aislando núcleo 3... <span class="fail">INFECTADO</span>',ms:220},
+                            {html:'<span class="fail">&gt; TODOS LOS NÚCLEOS HAN FALLADO</span>',ms:500},
+                            {html:'<span class="warn">&gt; Buscando protocolo de último recurso...</span>',ms:600},
+                            {html:'&gt; Protocolo FÉNIX detectado... <span class="ok">ENCONTRADO</span>',ms:700},
+                            {html:'<span class="warn">&gt; Iniciando RECONSTRUCCIÓN TOTAL del sistema...</span>',ms:500},
+                          ],()=>{
+                            hideRestart(()=>{
+                              screenOff(()=>{
+                                setTimeout(()=>{
+                                  screenOn('#00ff88', ()=>{
+                                    startReconfigSequence();
+                                  });
+                                }, 400);
+                              });
+                            });
                           });
-                        }, 400);
-                      });
+                        });
+                      }, 600); // pause in black before red boot
                     });
-                  });
+                  }, 500); // die after 500ms
                 });
-              }, 600);
-            }, 900);
-          }
-        })(performance.now());
-      }, 800);
-    });
+              }, 600); // delay before purple attempt
+            }, 900); // delay before second attempt block
+          }         // closes else{ of partExpand
+        })(performance.now()); // run partExpand
+      }, 800);      // Black. A moment of nothing.
+    });             // screenOff "monitor dying"
   }, 1000);
 }, 21000);
 
@@ -991,21 +1095,135 @@ function startReconfigSequence(){
       err.style.transition='opacity 0.5s'; err.style.opacity='1'; err.style.pointerEvents='auto';
     },11200);
 
-    // Countdown to redirect
+    // ── Error screen visible + credits slide in ──
+    // Give plenty of time to read (10s on error screen)
     setTimeout(()=>{
-      setTimeout(()=> document.getElementById('credits').classList.add('visible'), 800);
-      let count = 5;
-      const cEl  = document.getElementById('countdown');
-      const t = setInterval(()=>{
-        cEl.textContent = --count;
-        if(count <= 0){
-          clearInterval(t);
-          gEl.style.cssText = 'background:rgba(255,34,68,0.5);opacity:1';
-          setTimeout(()=> window.location.href='juego.html', 500);
-        }
-      },1000);
-    },12000);
+      // Slide in small corner credits while error screen shows
+      setTimeout(()=> document.getElementById('credits').classList.add('visible'), 1200);
+
+      // After 9s on error screen → power off into title card
+      setTimeout(()=>{
+        // Error screen flicker-off like a dying monitor
+        const err = document.getElementById('errorScreen');
+        const flickSeq = [0.7,1,0.3,0.8,0.05,0.9,0];
+        flickSeq.forEach((op,i)=> setTimeout(()=>{ err.style.transition='none'; err.style.opacity=op; }, i*90));
+        // Corner credits slide back out
+        setTimeout(()=> document.getElementById('credits').classList.remove('visible'), 100);
+
+        // Screen goes black
+        setTimeout(()=>{
+          err.style.opacity='0';
+          screenOff(()=>{
+            // ── Pause in the dark ── 1.2s
+            setTimeout(()=>{
+              // Soft cyan/white CRT power-on → title card
+              screenOn('#00bcd4', ()=>{
+                startTitleSequence();
+              });
+            }, 1200);
+          });
+        }, 650);
+      }, 9000);
+    }, 12000);
   }
+}
+
+// ═══════════════════════════════════════
+// TITLE CARD SEQUENCE
+// ═══════════════════════════════════════
+function startTitleSequence(){
+  const ts      = document.getElementById('titleScreen');
+  const titleEl = document.getElementById('titleText');
+  const divBot  = document.getElementById('titleDivBot');
+  const credits = document.getElementById('titleCredits');
+  const bloom   = document.getElementById('whiteBloom');
+
+  // Fade in title screen
+  ts.style.transition = 'opacity 1.2s';
+  ts.style.opacity    = '1';
+
+  // Type out the title letter by letter
+  const fullTitle = 'ESCAPE FROM\nTHE SINKING TITANIC';
+  let charIdx = 0;
+
+  // Small delay before typing starts
+  setTimeout(()=>{
+    const typeTimer = setInterval(()=>{
+      charIdx++;
+      // Replace \n with <br>
+      titleEl.innerHTML = fullTitle.slice(0, charIdx).replace('\n', '<br>');
+      if(charIdx >= fullTitle.length){
+        clearInterval(typeTimer);
+        // After title is done → show divider then credits
+        setTimeout(()=>{
+          divBot.classList.add('show');
+          setTimeout(()=>{
+            credits.classList.add('show');
+
+            // ── Sit on title card for 6 seconds ──
+            setTimeout(()=>{
+              // Credits in corner one more time
+              document.getElementById('credits').classList.add('visible');
+
+              // After 3 more seconds → graceful CRT power off
+              setTimeout(()=>{
+                // Fade corner credits out
+                document.getElementById('credits').classList.remove('visible');
+
+                // Title card dims out slowly
+                ts.style.transition='opacity 1.8s';
+                ts.style.opacity='0.0';
+
+                // Screen powers off
+                screenOff(()=>{
+                  // ── Long final black pause ── 1.5s
+                  setTimeout(()=>{
+                    startWhiteBloom(bloom);
+                  }, 1500);
+                });
+              }, 3000);
+            }, 6000);
+          }, 1200); // credits appear 1.2s after divider
+        }, 600);    // divider appears 0.6s after title done
+      }
+    }, 55); // typing speed
+  }, 800);
+}
+
+// ═══════════════════════════════════════
+// WHITE BLOOM → REDIRECT
+// ═══════════════════════════════════════
+function startWhiteBloom(bloom){
+  bloom.style.transition='none';
+  bloom.style.opacity='0';
+  bloom.style.transform='scale(0.01)';
+
+  // Phase 1: slow radial bloom expands from center
+  const start = performance.now();
+  const phase1Dur = 3000;
+  (function growBloom(now){
+    const t = Math.min((now - start) / phase1Dur, 1);
+    // Eased scale: starts slow, accelerates
+    const ease = t < 0.6 ? (t/0.6)*(t/0.6)*0.6 : 0.6 + (t-0.6)/0.4 * 0.4;
+    const sc = 0.01 + ease * 14;       // grows to cover full screen
+    const op = Math.min(t * 1.8, 1);   // fades in
+    bloom.style.transform = `scale(${sc})`;
+    bloom.style.opacity   = op;
+    if(t < 1) requestAnimationFrame(growBloom);
+    else{
+      // Phase 2: whole screen just white, hold 0.8s
+      bloom.style.background = '#fff';
+      bloom.style.transform  = 'scale(1)';
+      bloom.style.opacity    = '1';
+      setTimeout(()=>{
+        // Slight flicker then navigate
+        bloom.style.transition='opacity 0.06s';
+        bloom.style.opacity='0.6';
+        setTimeout(()=>{ bloom.style.opacity='1'; },80);
+        setTimeout(()=>{ window.location.href='juego.html'; }, 600);
+      }, 800);
+    }
+  })(performance.now());
 }
 </script>
 </body>
