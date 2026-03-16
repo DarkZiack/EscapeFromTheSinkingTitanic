@@ -689,6 +689,11 @@
         <a-text value="Volver al pasillo" align="center" color="#FFFFFF" width="1.8" position="0 0 0.01"></a-text>
       </a-entity>
 
+      <a-box class="wall" position="10 1 5.69" width="30" height="3" depth="0.5" visible="false"></a-box>
+      <a-box class="wall" position="10 1 1.284" width="30" height="3" depth="0.5" visible="false"></a-box>
+      <a-box class="wall" position="-3.72 1 5" width="0.5" height="3" depth="30" visible="false"></a-box>
+      <a-box class="wall" position="23.46 1 5" width="0.5" height="3" depth="30" visible="false"></a-box>
+
       <!-- Botón 2 - Armeria (requiere código) -->
       <a-entity
         id="boton-2"
@@ -729,29 +734,26 @@
       <a-plane position="0 0.01 0" rotation="-90 0 0" width="100" height="100" color="#888888" visible="false" shadow="receive: true"></a-plane>
 
       <!-- Player Rig -->
-      <a-entity 
-        id="player-rig"
-        movement-controls="speed: 0.15; fly: false; constrains: { min: {y: 0}, max: {y: 10} }"
-        position="0 0 5">
-        
-        <a-entity 
-          id="camera"
-          camera 
-          position="0 1.6 0" 
+<a-entity id="camera"
+          camera
+          position="0 1.6 0"
           look-controls="pointerLockEnabled: true"
           wasd-controls="enabled: false; acceleration: 30">
 
-          <a-cursor 
-            id="cursor"
-            color="#FFF" 
+  <a-cursor id="cursor"
+            color="#FFF"
             opacity="0.5"
             scale="0.4 0.4 0.4"
             fuse="false"
-            raycaster="objects: .pickable, .clickable, .interactable; far: 5">
-          </a-cursor>
-        </a-entity>
-        <a-sphere radius="0.5" position="0 0 0" visible="false" class="player-collider"></a-sphere>
-      </a-entity>
+            raycaster="objects: .pickable, .clickable; far: 0.5">
+  </a-cursor>
+
+  <!-- COLLISION SENSOR -->
+  <a-entity id="sensor"
+            raycaster="objects: .wall; far: 0.6; showLine: false">
+  </a-entity>
+
+</a-entity>
 
       <!-- Lighting -->
       <a-entity light="type: ambient; color: #FFFFFF; intensity: 0.3" id="ambient-light"></a-entity>
@@ -1266,7 +1268,44 @@
         });
 
       });
+const rig = document.querySelector('#player-rig');
+const sensor = document.querySelector('#sensor');
+let lastValidPosition = new THREE.Vector3();
 
+AFRAME.registerComponent('col-check', {
+  tick: function () {
+
+    const raycaster = sensor.components.raycaster;
+    if (!raycaster) return;
+
+    const currentPosition = rig.object3D.position;
+
+    const movementDirection = new THREE.Vector3()
+      .copy(currentPosition)
+      .sub(lastValidPosition)
+      .normalize();
+
+    if (movementDirection.length() > 0) {
+
+      sensor.setAttribute('raycaster', 'direction',
+        movementDirection.x + ' ' +
+        movementDirection.y + ' ' +
+        movementDirection.z
+      );
+
+      if (raycaster.intersections.length > 0) {
+        rig.object3D.position.copy(lastValidPosition);
+      } else {
+        lastValidPosition.copy(currentPosition);
+      }
+
+    } else {
+      lastValidPosition.copy(currentPosition);
+    }
+  }
+});
+
+document.querySelector('a-scene').setAttribute('col-check', '');
       updateHotbar();
       startTimer();
     </script>
