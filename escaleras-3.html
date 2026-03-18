@@ -772,7 +772,7 @@
 
     <div id="pickup-notice"></div>
     <div id="interact-hint">[ E ] Recoger</div>
-    <div id="fuse-hint">⚡ Sin energía — Activa el fuse box primero</div>
+    <div id="fuse-hint">⚡ Sin energía — necesitas pinzas de alambre y activar el fuse box</div>
     <div id="power-status">⚡ ENERGÍA CORTADA</div>
 
     <!-- Keycard overlay -->
@@ -918,6 +918,13 @@
         return inventory.some(item => item.item === itemName);
       }
 
+      // remove an item from inventory (e.g. when using a tool)
+      function removeItem(itemName) {
+        inventory = inventory.filter(i => i.item !== itemName);
+        updateHotbar();
+        saveInventory();
+      }
+
       var noticeTimer = null;
       function showNotice(text) {
         var el = document.getElementById('pickup-notice');
@@ -951,11 +958,20 @@
 
       // ── FUSE BOX ──
       function activatePower() {
+        // need wire cutters to access the wiring inside the fuse box
         if (powerOn) return;
+        if (!hasItem('wire_cutter')) {
+          showNotice('✂️  Necesitas unas pinzas de alambre para activar');
+          return;
+        }
         powerOn = true;
+
+        // consume the wire cutter after use so the player can't reuse it
+        removeItem('wire_cutter');
 
         document.querySelector('#ambient-light').setAttribute('light', 'type: ambient; color: #fff8e0; intensity: 0.85');
         document.querySelector('#room-point-light').setAttribute('light', 'type: point; color: #fff8e0; intensity: 1.8; distance: 20; decay: 1.5');
+
 
         const fuseLight = document.querySelector('#fuse-light');
         fuseLight.setAttribute('color', '#00ff66');
@@ -972,7 +988,7 @@
         document.getElementById('lock-status').setAttribute('value', '💳 Keycard requerida');
         document.getElementById('lock-status').setAttribute('color', '#ffc83c');
 
-        showNotice('⚡  Luz encendida — Usa la keycard en la puerta');
+        showNotice('✂️  Usaste las pinzas, ⚡ luz encendida — Usa la keycard en la puerta');
       }
 
       // ── KEYCARD OVERLAY ──
@@ -1212,7 +1228,13 @@
         const fuseBox = document.querySelector('#fuse-box');
         fuseBox.addEventListener('mouseenter', () => {
           hoveredInteractable = fuseBox;
-          hint.textContent = powerOn ? '⚡  Luz ya encendida' : '[ E ]  Activar Fuse Box';
+          if (powerOn) {
+            hint.textContent = '⚡  Luz ya encendida';
+          } else if (!hasItem('wire_cutter')) {
+            hint.textContent = '✂️  Necesitas pinzas de alambre';
+          } else {
+            hint.textContent = '[ E ]  Activar Fuse Box';
+          }
           hint.classList.add('show');
         });
         fuseBox.addEventListener('mouseleave', () => {
