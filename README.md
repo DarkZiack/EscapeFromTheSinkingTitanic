@@ -37,7 +37,7 @@ Consulta tots els detalls tècnics, el disseny i la gestió de les tasques:
 
 ## 🚀 Com Començar
 
-> ℹ️ Aquesta secció es completarà quan el codi estigui disponible.
+> [Fer-me Click]([https://docs.google.com/document/d/1eH505_W1uBod1oyxw8frXFRc_U5josWgIWl4K5K2r60/edit?tab=t.0#heading=h.8iz3caj331gm](https://darkziack.github.io/EscapeFromTheSinkingTitanic/juego.html))
 
 ### Clonar el repositori
 ```bash
